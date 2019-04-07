@@ -3,11 +3,10 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Sources;
 
-final class EuropeanCentralBank extends Source {
+final class BankEurope extends Source {
 
     function __construct() {
         $this->api = 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
-        // ECB data updated daily between 2.15 p.m. and 3.00 p.m. CET
     }
 
     function process() {
@@ -17,7 +16,7 @@ final class EuropeanCentralBank extends Source {
         }
         $currency = [];
         $date = '';
-        foreach(explode("\n", $this->raw) as $line) {
+        foreach (explode("\n", $this->raw) as $line) {
             if (preg_match("/time='([[:graph:]]+)'/", $line, $day)) {
                 $date = $day[1];
             }

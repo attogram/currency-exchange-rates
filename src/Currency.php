@@ -5,7 +5,7 @@ namespace Attogram\Currency;
 
 class Currency
 {
-    public static $list = [
+    public static $currencies = [
         'EUR' => [
             'name' => 'Euro',
         ],
@@ -25,7 +25,7 @@ class Currency
 
     public static function isValidCurrencyCode(string $code)
     {
-        if (array_key_exists($code, static::$list)) {
+        if (array_key_exists($code, static::$currencies)) {
             return true;
         }
         return false;
