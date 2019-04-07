@@ -4,13 +4,13 @@
     "type": "project",
     "license": "MIT",
     "homepage": "https://github.com/attogram/currency-exchange-rates",
+    "require": {
+        "attogram/router": "^4.0",
+        "php": "^7.0"
+    },
     "autoload": {
         "psr-4": {
             "Attogram\\Currency\\": "src/"
         }
-    },
-    "require": {
-        "attogram/router": "^4.0",
-        "php": "^7.0"
     }
 }
