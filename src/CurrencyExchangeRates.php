@@ -53,7 +53,10 @@ class CurrencyExchangeRates
 
     protected function about()
     {
-        print '<HR>ABOUT<HR>';
+        print '<pre>ABOUT<br>';
+        foreach(Source::$sources as $source) {
+            print_r($source);
+        }
     }
 
     protected function admin()

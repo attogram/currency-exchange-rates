@@ -5,7 +5,7 @@ namespace Attogram\Currency;
 
 class Source
 {
-    public $sources = [
+    public static $sources = [
         'ecb' => [
             'currency'   => 'EUR',
             'sourceName' => 'European Central Bank',
