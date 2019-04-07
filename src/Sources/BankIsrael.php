@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Sources;
 
+use function explode;
+use function preg_match;
+
 final class BankIsrael extends Source {
 
     public function __construct()
@@ -14,6 +17,7 @@ final class BankIsrael extends Source {
     {
         if (!$this->raw) {
             $this->result = false;
+
             return;
         }
         $currency = [];
@@ -23,9 +27,9 @@ final class BankIsrael extends Source {
                 $date = $m[1];
             }
             if (preg_match("/\<CURRENCYCODE\>([[:graph:]]+)\<\/CURRENCYCODE\>/", $line, $m)){
-                $currencyCode= $m[1];
+                $currencyCode = $m[1];
             }
-            if (preg_match("/\<RATE\>([[:graph:]]+)\<\/RATE\>/",$line,$m)) {
+            if (preg_match("/\<RATE\>([[:graph:]]+)\<\/RATE\>/", $line, $m)) {
                 $rate = $m[1];
                 $currency[$currencyCode] = $rate;
             }

@@ -3,6 +3,11 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Sources;
 
+use function explode;
+use function preg_match;
+use function round;
+use function str_replace;
+
 final class BankRussia extends Source {
 
     public function __construct()
@@ -14,6 +19,7 @@ final class BankRussia extends Source {
     {
         if (!$this->raw) {
             $this->result = false;
+
             return;
         }
         $currency = [];
