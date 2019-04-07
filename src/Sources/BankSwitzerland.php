@@ -5,11 +5,13 @@ namespace Attogram\Currency\Sources;
 
 class BankSwitzerland extends Source {
 
-	function __construct() { 
+    public function __construct()
+    {
 		$this->api = 'http://www.snb.ch/selector/en/mmr/exfeed/rss';
-	} 
+	}
 
-	function process() {
+    public function process()
+    {
         if (!$this->raw) {
             $this->result = false;
             return;

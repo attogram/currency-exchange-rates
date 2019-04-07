@@ -5,11 +5,13 @@ namespace Attogram\Currency\Sources;
 
 final class BankIsrael extends Source {
 
-	function __construct() { 
+    public function __construct()
+    {
 		$this->api = 'http://www.boi.org.il/currency.xml';
-	} 
+	}
 
-	function process() {
+    public function process()
+    {
         if (!$this->raw) {
             $this->result = false;
             return;

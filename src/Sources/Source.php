@@ -11,7 +11,7 @@ class Source implements SourceInterface
     public $raw;
     public $result;
 
-    function get()
+    public function get()
     {
         if (!isset($this->api) || !$this->api) {
             $this->raw = false;
@@ -20,12 +20,12 @@ class Source implements SourceInterface
         $this->raw = file_get_contents($this->api);
     }
 
-    function process()
+    public function process()
     {
         $this->result = false;
     }
 
-    function insert(string $currency = '', string $day = '', string $source = '', array $rates = [])
+    public function insert(string $currency = '', string $day = '', string $source = '', array $rates = [])
     {
         foreach ($rates as $xcurrency => $rate) {
             Database::insert(

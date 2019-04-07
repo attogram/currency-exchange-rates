@@ -5,11 +5,13 @@ namespace Attogram\Currency\Sources;
 
 final class BankEurope extends Source {
 
-    function __construct() {
+    public function __construct()
+    {
         $this->api = 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
     }
 
-    function process() {
+    public function process()
+    {
         if (!$this->raw) {
             $this->result = false;
             return;

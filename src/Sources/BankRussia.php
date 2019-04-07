@@ -5,11 +5,13 @@ namespace Attogram\Currency\Sources;
 
 final class BankRussia extends Source {
 
-	function __construct() { 
+    public function __construct()
+    {
 		$this->api = 'http://www.cbr.ru/scripts/XML_daily.asp';
-	} 
-	
-	function process() {
+	}
+
+    public function process()
+    {
         if (!$this->raw) {
             $this->result = false;
             return;
