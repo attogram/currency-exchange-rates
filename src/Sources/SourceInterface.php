@@ -7,4 +7,5 @@ interface SourceInterface
 {
     public function process();
     public function get();
+    public function insert();
 }

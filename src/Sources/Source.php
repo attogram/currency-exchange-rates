@@ -3,40 +3,40 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Sources;
 
-class Source implements SourceInterface {
+use Attogram\Currency\Database;
 
+class Source implements SourceInterface
+{
     public $api;
     public $raw;
     public $result;
 
-    function get() {
-        if (!isset($this->api) || !$this->api ) {
+    function get()
+    {
+        if (!isset($this->api) || !$this->api) {
             $this->raw = false;
             return;
         }
         $this->raw = file_get_contents($this->api);
     }
 
-    function process() {
+    function process()
+    {
         $this->result = false;
     }
 
-    function insert(
-        string $base_currency = '',
-        string $day = '',
-        string $source = '',
-        array $currency = []
-    ) {
-        foreach ($currency as $name => $value) {
-            QUERYFUNCTION(
+    function insert(string $currency = '', string $day = '', string $source = '', array $rates = [])
+    {
+        foreach ($rates as $xcurrency => $rate) {
+            Database::insert(
                 'INSERT OR REPLACE INTO rate (day, source, currency, xcurrency, rate)'
                 . ' VALUES (:day, :source, :currency, :xcurrency, :rate)',
                 $bind = [
                     ':day' => $day,
+                    ':rate' => $rate,
+                    ':currency' => $currency,
+                    ':xcurrency' => $xcurrency,
                     ':source' => $source,
-                    ':currency' => $base_currency,
-                    ':xcurrency' => $name,
-                    ':rate' => $value
                 ]
             );
         }

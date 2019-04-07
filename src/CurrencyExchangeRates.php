@@ -5,14 +5,10 @@ namespace Attogram\Currency;
 
 use Attogram\Router\Router;
 
-/**
- * Class CurrencyExchangeRates
- * @package Attogram\Currency
- */
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.2-alpha';
+    const VERSION = '0.0.3-alpha';
 
     /** @var Router */
     protected $router;

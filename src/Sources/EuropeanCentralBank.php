@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Sources;
 
-class EuropeanCentralBank extends Source {
+final class EuropeanCentralBank extends Source {
 
     function __construct() {
         $this->api = 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
