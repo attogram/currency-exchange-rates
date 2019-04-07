@@ -63,7 +63,7 @@ class CurrencyExchangeRates
 
     protected function currency()
     {
-        $currency = $this->router->getVars()[0];
+        $currency = $this->router->getVar(0);
         if (!Currency::isValidCurrencyCode($currency)) {
             $this->error404('Currency Code Not Found');
         }
@@ -72,11 +72,11 @@ class CurrencyExchangeRates
 
     protected function currencyPair()
     {
-        $source = $this->router->getVars()[0];
+        $source = $this->router->getVar(0);
         if (!Currency::isValidCurrencyCode($source)) {
             $this->error404('Source Currency Code Not Found');
         }
-        $target = $this->router->getVars()[1];
+        $target = $this->router->getVar(1);
         if (!Currency::isValidCurrencyCode($target)) {
             $this->error404('Target Currency Code Not Found');
         }
