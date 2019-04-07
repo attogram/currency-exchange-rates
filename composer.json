@@ -1,0 +1,16 @@
+{
+    "name": "attogram/currency-exchange-rates",
+    "description": "Currency Exchange Rates",
+    "type": "project",
+    "license": "MIT",
+    "homepage": "https://github.com/attogram/currency-exchange-rates",
+    "autoload": {
+        "psr-4": {
+            "Attogram\\Currency\\": "src/"
+        }
+    },
+    "require": {
+        "attogram/router": "^4.0",
+        "php": "^7.0"
+    }
+}
