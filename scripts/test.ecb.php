@@ -7,7 +7,7 @@ $currency = [];
 $date = '?';
 foreach (file($endpoint) as $line) {
 	$line = trim($line);
-	if (preg_match("/time='([[:graph:]]+)'/", $line,$day)){
+	if (preg_match("/time='([[:graph:]]+)'/", $line, $day)){
 		$date = $day[1];
 	}
 	if (preg_match("/currency='([[:alpha:]]+)'/", $line, $currencyCode)) {

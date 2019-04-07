@@ -12,7 +12,7 @@ use Attogram\Router\Router;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.1-alpha.1';
+    const VERSION = '0.0.2-alpha';
 
     /** @var Router */
     protected $router;
@@ -54,7 +54,7 @@ class CurrencyExchangeRates
     protected function about()
     {
         print '<pre>ABOUT<br>';
-        foreach(Source::$sources as $source) {
+        foreach(Sources::$sources as $source) {
             print_r($source);
         }
     }

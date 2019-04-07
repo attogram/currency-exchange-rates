@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency;
 
-class Source
+class Sources
 {
     public static $sources = [
         'ecb' => [
