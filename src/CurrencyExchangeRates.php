@@ -4,11 +4,17 @@ declare(strict_types = 1);
 namespace Attogram\Currency;
 
 use Attogram\Router\Router;
+use function header;
+use function method_exists;
+use function print_r;
 
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.6-alpha';
+    const VERSION = '0.0.7-alpha';
+
+    /** @var Database */
+    private $db;
 
     /** @var Router */
     private $router;
@@ -18,11 +24,13 @@ class CurrencyExchangeRates
         $this->router = new Router();
         $this->router->setForceSlash(true);
         $this->router->allow('/', 'home');
-        $this->router->allow('/about/', 'about');
-        $this->router->allow('/admin/', 'admin');
-        $this->router->allow('/admin/get/?', 'adminGet');
         $this->router->allow('/?/', 'currency');
         $this->router->allow('/?/?/', 'currencyPair');
+        $this->router->allow('/about/', 'about');
+        $this->router->allow('/admin/', 'admin');
+        $this->router->allow('/admin/database/', 'adminDatabase');
+        $this->router->allow('/admin/get/?/', 'adminGet');
+
         $match = $this->router->match();
         if ($match && method_exists($this, $match)) {
             $this->{$match}();
@@ -110,7 +118,43 @@ class CurrencyExchangeRates
         
         <a href="get/cbr/">get ' . Source::$sources['cbr']['name'] . '</a>
 
+
+        <a href="database/">Database</a>
+        
         </pre>';
+    }
+
+    private function adminDatabase()
+    {
+        print '<pre>
+
+        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
+        
+        <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>
+        
+        Admin: Database:
+        
+        <a href="./?create=1">Create Database</a>
+        
+        </pre>';
+
+        if (!$this->router->getGet('create')) {
+            return;
+        }
+
+        print '<pre>   Initialize Database: ';
+        $this->db = new Database();
+        print $this->db->init()
+            ? 'OK'
+            : 'ERROR';
+        print '</pre>';
+
+        print '<pre>   Create Table: ';
+        print $this->db->createTables()
+            ? 'OK'
+            : 'ERROR';
+        print '</pre>';
+
     }
 
     private function adminGet()
@@ -121,7 +165,18 @@ class CurrencyExchangeRates
 
             return;
         }
-        print "ADMINGET $source";
+        print '<pre>
+
+        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
+        
+        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
+        
+        ADMINGET $source
+
+        </pre>';
+
+        $this->db = new Database();
+        print_r($this->db);
     }
 
     private function currency()
