@@ -3,23 +3,25 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency;
 
-class Currency
+use function array_key_exists;
+
+class Currencies
 {
     public static $currencies = [
-        'EUR' => [
-            'name' => 'Euro',
-        ],
-        'USD' => [
-            'name' => 'US Dollar',
-        ],
         'CHF' => [
             'name' => 'Swiss Franc',
+        ],
+        'EUR' => [
+            'name' => 'Euro',
         ],
         'ILS' => [
             'name' => 'New Israeli Sheqel',
         ],
         'RUB' => [
             'name' => 'Russian Ruble',
+        ],
+        'USD' => [
+            'name' => 'US Dollar',
         ],
     ];
 

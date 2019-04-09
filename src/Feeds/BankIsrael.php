@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace Attogram\Currency\Sources;
+namespace Attogram\Currency\Feeds;
 
 use function explode;
 use function preg_match;
 
-final class BankIsrael extends Source {
+final class BankIsrael extends Feed {
 
     public function __construct()
     {
@@ -16,8 +16,6 @@ final class BankIsrael extends Source {
     public function process()
     {
         if (!$this->raw) {
-            $this->result = false;
-
             return;
         }
         $currency = [];

@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Attogram\Currency;
 
 use PDO;
-use function in_array;
 use PDOException;
+use function in_array;
+use function print_r;
 
 class Database
 {

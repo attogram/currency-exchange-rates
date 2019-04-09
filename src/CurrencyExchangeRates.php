@@ -11,7 +11,7 @@ use function print_r;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.7-alpha';
+    const VERSION = '0.0.8-alpha';
 
     /** @var Database */
     private $db;
@@ -90,13 +90,13 @@ class CurrencyExchangeRates
         <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
         
         ';
-        foreach(Currency::$currencies as $code => $currency) {
-            print "\n$code\n";
+        foreach(Currencies::$currencies as $currencyCode => $currency) {
+            print "\n$currencyCode\n";
             print_r($currency);
         }
-        foreach(Source::$sources as $code => $source) {
-            print "\n$code\n";
-            print_r($source);
+        foreach(Feeds::$feeds as $feedCode => $feed) {
+            print "\n$feedCode\n";
+            print_r($feed);
         }
         print '</pre>';
     }
@@ -110,13 +110,13 @@ class CurrencyExchangeRates
         <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
         
         
-        <a href="get/snb/">get ' . Source::$sources['snb']['name'] . '</a>
+        <a href="get/BankSwitzerland/">get ' . Feeds::$feeds['BankSwitzerland']['name'] . '</a>
         
-        <a href="get/ecb/">get ' . Source::$sources['ecb']['name'] . '</a>
+        <a href="get/BankEurope/">get ' . Feeds::$feeds['BankEurope']['name'] . '</a>
         
-        <a href="get/boi/">get ' . Source::$sources['boi']['name'] . '</a>
+        <a href="get/BankIsrael/">get ' . Feeds::$feeds['BankIsrael']['name'] . '</a>
         
-        <a href="get/cbr/">get ' . Source::$sources['cbr']['name'] . '</a>
+        <a href="get/BankRussia/">get ' . Feeds::$feeds['BankRussia']['name'] . '</a>
 
 
         <a href="database/">Database</a>
@@ -159,30 +159,31 @@ class CurrencyExchangeRates
 
     private function adminGet()
     {
-        $source = $this->router->getVar(0);
-        if (!Source::isValidSourceCode($source)) {
-            $this->error404('Currency Source Not Found');
+        $feed = $this->router->getVar(0);
+        if (!Feeds::isValidFeedCode($feed)) {
+            $this->error404('Feed Not Found');
 
             return;
         }
+
+        $this->db = new Database();
+
         print '<pre>
 
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
         
         <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
         
-        ADMINGET $source
-
+        ADMINGET ' . $feed . '
+        
+        DB ' . print_r($this->db, true) . '
         </pre>';
-
-        $this->db = new Database();
-        print_r($this->db);
     }
 
     private function currency()
     {
         $currency = $this->router->getVar(0);
-        if (!Currency::isValidCurrencyCode($currency)) {
+        if (!Currencies::isValidCurrencyCode($currency)) {
             $this->error404();
 
             return;
@@ -194,7 +195,7 @@ class CurrencyExchangeRates
     {
         $source = $this->router->getVar(0);
         $target = $this->router->getVar(1);
-        if (!Currency::isValidCurrencyCode($source) || !Currency::isValidCurrencyCode($target)) {
+        if (!Currencies::isValidCurrencyCode($source) || !Currencies::isValidCurrencyCode($target)) {
             $this->error404();
 
             return;
