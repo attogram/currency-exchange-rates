@@ -44,7 +44,7 @@ class Feed
      * @param array $rates
      */
     public function insert(
-        string $source = '', 
+        string $source = '',
         string $day = '',
         string $feed = '',
         array $rates = []
