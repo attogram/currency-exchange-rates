@@ -5,6 +5,7 @@ namespace Attogram\Currency;
 
 use PDO;
 use PDOException;
+
 use function in_array;
 use function print_r;
 
@@ -48,23 +49,10 @@ class Database
     /**
      * @param string $sql
      * @param array $bind
-     * @return bool
-     */
-    public function insert(string $sql, array $bind = []) :bool
-    {
-        print "insert \n $sql \n " . print_r($bind, true) . "\n";
-
-        return true;
-    }
-
-    /**
-     * @param string $sql
-     * @param array $bind
      * @return array
      */
     public function queryArray(string $sql, array $bind = []) :array
     {
-        //print "<pre>queryArray \n $sql \n " . print_r($bind, true) . "</pre>";
         $statement = $this->db->prepare($sql);
         if (!$statement) {
             return [];
@@ -90,15 +78,18 @@ class Database
      */
     function queryBool(string $sql, array $bind = []) :bool
     {
-        //print "<pre>queryBool \n $sql \n " . print_r($bind, true) . "</pre>";
         $statement = $this->db->prepare($sql);
         if (!$statement) {
+            //print "\nqueryBool: statement failed: " . print_r($this->db->errorInfo(), true) . "\n";
+
             return false;
         }
         foreach ($bind as $name => $value) {
             $statement->bindParam($name, $value);
         }
         if (!$statement->execute()) {
+            //print "\nqueryBool: execute failed\n";
+
             return false;
         }
 

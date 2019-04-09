@@ -9,17 +9,13 @@ use GuzzleHttp\Exception\GuzzleException;
 class Feed
 {
     /** @var string */
-    public $api = '';
+    protected $api = '';
 
-    /** @var string */
-    public $raw = '';
-
-    public function get()
+    public function get() :string
     {
-        $this->raw = '';
-
         if (empty($this->api)) {
-            return;
+            //print "\nERROR: no api\n";
+            return '';
         }
 
         $client = new GuzzleClient();
@@ -27,14 +23,18 @@ class Feed
         try {
             $result = $client->request('GET', $this->api);
         } catch (GuzzleException $exception) {
-            return;
+            //print "\nERROR: " . $exception->getMessage() . "\n";
+            return '';
         }
 
         if ($result->getStatusCode() !== 200) {
-            return;
+            //print "\nERROR: StatusCode = " . $result->getStatusCode() . "\n";
+            return '';
         }
+        $contents = $result->getBody()->getContents();
+        print "got: <hr>" . htmlentities($contents) . "<hr>";
 
-        $this->raw = $result->getBody();
+        return $contents;
     }
 
     /**
@@ -44,27 +44,30 @@ class Feed
      * @param array $rates
      */
     public function insert(
-        string $source = '',
         string $day = '',
+        string $source = '',
         string $feed = '',
         array $rates = []
     ) {
         $db = new Database();
+        $sql = '
+            INSERT OR REPLACE 
+            INTO rates (day, rate, source, target, feed) 
+            VALUES (:day, :rate, :source, :target, :feed)
+        ';
         foreach ($rates as $target => $rate) {
-           $db->insert(
-                '
-                INSERT OR REPLACE 
-                INTO rate (day, rate, source, target, feed) 
-                VALUES (:day, :rate, :source, :target, :feed)
-                ',
-                [
-                    ':day' => $day,
-                    ':rate' => $rate,
-                    ':source' => $source,
-                    ':target' => $target,
-                    ':feed' => $feed,
-                ]
-            );
+            $bind = [
+                'day' => $day,
+                'rate' => $rate,
+                'source' => $source,
+                'target' => $target,
+                'feed' => $feed,
+            ];
+            print "\nData: " . print_r($bind, true);
+//            $result = $db->queryBool($sql, $bind);
+//            if (!$result) {
+//                print "\nERROR inserting " . implode(', ', $bind). "\n";
+//            }
         }
     }
 }

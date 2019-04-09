@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace Attogram\Currency;
 
 use Attogram\Router\Router;
+
 use function header;
 use function method_exists;
-use function print_r;
 
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.9-alpha';
+    const VERSION = '0.0.10-alpha';
 
     /** @var Database */
     private $db;
@@ -26,10 +26,9 @@ class CurrencyExchangeRates
         $this->router->allow('/', 'home');
         $this->router->allow('/?/', 'currency');
         $this->router->allow('/?/?/', 'currencyPair');
-        $this->router->allow('/about/', 'about');
         $this->router->allow('/admin/', 'admin');
         $this->router->allow('/admin/database/', 'adminDatabase');
-        $this->router->allow('/admin/get/?/', 'adminGet');
+        $this->router->allow('/admin/feed/?/', 'adminFeed');
 
         $match = $this->router->match();
         if ($match && method_exists($this, $match)) {
@@ -48,11 +47,11 @@ class CurrencyExchangeRates
         header('HTTP/1.0 404 Not Found');
         print '<pre>
 
+
         404 ' . $message . '
 
 
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        
         </pre>';
     }
 
@@ -61,62 +60,31 @@ class CurrencyExchangeRates
         print '<pre>
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
         
-        
         <a href="CHF/">CHF</a>    <a href="CHF/USD/">CHF/USD</a>
-        
         <a href="EUR/">EUR</a>    <a href="EUR/USD/">EUR/USD</a>
-        
         <a href="ILS/">ILS</a>    <a href="ILS/USD/">ILS/USD</a>
-        
         <a href="RUB/">RUB</a>    <a href="RUB/USD/">RUB/USD</a>
-
 
         <a href="about/">about</a>
         
-        
-        
         <a href="admin/">admin</a>
-
         </pre>';
-    }
-
-    private function about()
-    {
-        print '<pre>
-        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
-        
-        ';
-        foreach(Config::$currencies as $currencyCode => $currency) {
-            print "\n$currencyCode\n";
-            print_r($currency);
-        }
-        foreach(Config::$feeds as $feedCode => $feed) {
-            print "\n$feedCode\n";
-            print_r($feed);
-        }
-        print '</pre>';
     }
 
     private function admin()
     {
         print '<pre>
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>
-        
-        
-        <a href="get/BankSwitzerland/">get ' . Config::$feeds['BankSwitzerland']['name'] . '</a>
-        
-        <a href="get/BankEurope/">get ' . Config::$feeds['BankEurope']['name'] . '</a>
-        
-        <a href="get/BankIsrael/">get ' . Config::$feeds['BankIsrael']['name'] . '</a>
-        
-        <a href="get/BankRussia/">get ' . Config::$feeds['BankRussia']['name'] . '</a>
+        <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>';
 
+        print "\n\n\tFeeds:\n";
 
-        <a href="database/">Database</a>
-        
-        </pre>';
+        foreach (Config::$feeds as $code => $feed) {
+            print "\t" . '<a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n";
+        }
+
+        print "\n\n\t" . '<a href="database/">Database</a>';
+        print "\n\n\n</pre>";
     }
 
     private function adminDatabase()
@@ -150,26 +118,37 @@ class CurrencyExchangeRates
 
     }
 
-    private function adminGet()
+    private function adminFeed()
     {
-        $feed = $this->router->getVar(0);
-        if (!Config::isValidFeed($feed)) {
+        $feedCode = $this->router->getVar(0);
+        if (!Config::isValidFeed($feedCode)) {
             $this->error404('Feed Not Found');
 
             return;
         }
 
-        $this->db = new Database();
+        $class = "\\Attogram\\Currency\\Feeds\\" . $feedCode;
+        if (!class_exists($class)) {
+            $this->error404('Feed Class Not Found');
+
+            return;
+        }
 
         print '<pre>
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
         <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>
-        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
-        
-        ADMINGET ' . $feed . '
-        
-        DB ' . print_r($this->db, true) . '
-        </pre>';
+        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>'
+        . "\n\n";
+
+        $api = Config::getFeedApi($feedCode);
+        $name = Config::getFeedName($feedCode);
+
+        print "\t\nFeed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
+        print
+
+        (new $class($api))->process();
+
+        print "\n\n\n</pre>";
     }
 
     private function currency()

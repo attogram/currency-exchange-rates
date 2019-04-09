@@ -79,4 +79,26 @@ class Config
             ? true
             : false;
     }
+
+    /**
+     * @param string $feedCode
+     * @return string
+     */
+    public static function getFeedApi(string $feedCode) :string
+    {
+        return empty(static::$feeds[$feedCode]['api'])
+            ? ''
+            : static::$feeds[$feedCode]['api'];
+    }
+
+    /**
+     * @param string $feedCode
+     * @return string
+     */
+    public static function getFeedName(string $feedCode) :string
+    {
+        return empty(static::$feeds[$feedCode]['name'])
+            ? ''
+            : static::$feeds[$feedCode]['name'];
+    }
 }

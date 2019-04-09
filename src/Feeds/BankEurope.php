@@ -1,26 +1,33 @@
 <?php
 declare(strict_types = 1);
 
-namespace Attogram\Currency;
+namespace Attogram\Currency\Feeds;
+
+use Attogram\Currency\Feed;
 
 use function explode;
 use function preg_match;
 
 final class BankEurope extends Feed {
 
-    public function __construct()
+    /**
+     * BankEurope constructor.
+     * @param string $api
+     */
+    public function __construct(string $api)
     {
-        $this->api = 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
+        $this->api = $api;
     }
 
     public function process()
     {
-        if (!$this->raw) {
+        $raw = $this->get();
+        if (!$raw || !is_string($raw)) {
             return;
         }
         $currency = [];
         $date = '';
-        foreach (explode("\n", $this->raw) as $line) {
+        foreach (explode("\n", $raw) as $line) {
             if (preg_match("/time='([[:graph:]]+)'/", $line, $day)) {
                 $date = $day[1];
             }
@@ -30,6 +37,6 @@ final class BankEurope extends Feed {
                 }
             }
         }
-        $this->insert('EUR', $date, 'ecb-daily', $currency);
+        $this->insert($date, 'EUR', 'BankEurope', $currency);
     }
 }

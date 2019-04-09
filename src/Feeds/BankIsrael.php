@@ -1,26 +1,33 @@
 <?php
 declare(strict_types = 1);
 
-namespace Attogram\Currency;
+namespace Attogram\Currency\Feeds;
+
+use Attogram\Currency\Feed;
 
 use function explode;
 use function preg_match;
 
 final class BankIsrael extends Feed {
 
-    public function __construct()
+    /**
+     * BankIsrael constructor.
+     * @param string $api
+     */
+    public function __construct(string $api)
     {
-        $this->api = 'http://www.boi.org.il/currency.xml';
+        $this->api = $api;
     }
 
     public function process()
     {
-        if (!$this->raw) {
+        $raw = $this->get();
+        if (!$raw || !is_string($raw)) {
             return;
         }
         $currency = [];
         $date = $currencyCode = '';
-        foreach (explode("\n", $this->raw) as $line) {
+        foreach (explode("\n", $raw) as $line) {
             if (preg_match("/\<LAST_UPDATE\>([[:graph:]]+)\<\/LAST_UPDATE\>/", $line, $m)){
                 $date = $m[1];
             }
@@ -32,6 +39,6 @@ final class BankIsrael extends Feed {
                 $currency[$currencyCode] = $rate;
             }
         }
-        $this->insert('ILS', $date, 'boi-daily', $currency);
+        $this->insert($date, 'ILS','BankIsrael', $currency);
     }
 }

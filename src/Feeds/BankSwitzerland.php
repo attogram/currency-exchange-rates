@@ -1,7 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Attogram\Currency;
+namespace Attogram\Currency\Feeds;
+
+use Attogram\Currency\Feed;
 
 use function explode;
 use function preg_match;
@@ -10,20 +12,25 @@ use function substr;
 
 class BankSwitzerland extends Feed {
 
-    public function __construct()
+    /**
+     * BankSwitzerland constructor.
+     * @param string $api
+     */
+    public function __construct(string $api)
     {
-        $this->api = 'http://www.snb.ch/selector/en/mmr/exfeed/rss';
+        $this->api = $api;
     }
 
     public function process()
     {
-        if (empty($this->raw)) {
+        $raw = $this->get();
+        if (!$raw || !is_string($raw)) {
             return;
         }
         $currency = [];
         $date = $rate = '';
         $count = 0;
-        foreach (explode("\n", $this->raw) as $line) {
+        foreach (explode("\n", $raw) as $line) {
             if(preg_match("/\<dcterms\:created\>([[:graph:]]+)\<\/dcterms\:created\>/", $line,$m)) {
                 $date = $m[1];
                 $date = substr($date, 0, 10);
@@ -40,6 +47,6 @@ class BankSwitzerland extends Feed {
                 }
             }
         }
-        $this->insert('CHF', $date, 'snb-daily', $currency);
+        $this->insert($date, 'CHF','BankSwitzerland', $currency);
     }
 }

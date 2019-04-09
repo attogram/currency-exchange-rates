@@ -1,7 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Attogram\Currency;
+namespace Attogram\Currency\Feeds;
+
+use Attogram\Currency\Feed;
 
 use function explode;
 use function preg_match;
@@ -10,19 +12,24 @@ use function str_replace;
 
 final class BankRussia extends Feed {
 
-    public function __construct()
+    /**
+     * BankRussia constructor.
+     * @param string $api
+     */
+    public function __construct(string $api)
     {
-        $this->api = 'http://www.cbr.ru/scripts/XML_daily.asp';
+        $this->api = $api;
     }
 
     public function process()
     {
-        if (!$this->raw) {
+        $raw = $this->get();
+        if (!$raw || !is_string($raw)) {
             return;
         }
         $currency = [];
         $date = $xcurrency = '';
-        foreach (explode("\n", $this->raw) as $line) {
+        foreach (explode("\n", $raw) as $line) {
             if (preg_match("/Date=\"([[:graph:]]+)\"/", $line, $match) ) {
                 $date = $match[1];
                 $da = explode('.', $date);
@@ -41,6 +48,6 @@ final class BankRussia extends Feed {
                 $xcurrency = false;
             }
         }
-        $this->insert('RUB', $date, 'cbr-daily', $currency);
+        $this->insert($date, 'RUB','BankRussia', $currency);
     }
 }
