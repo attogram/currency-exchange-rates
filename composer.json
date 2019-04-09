@@ -6,9 +6,9 @@
     "homepage": "https://github.com/attogram/currency-exchange-rates",
     "require": {
         "attogram/router": "^4.0",
+        "guzzlehttp/guzzle": "^6.3",
         "php": "^7.0",
-        "ext-PDO": "*",
-        "guzzlehttp/guzzle": "^6.3"
+        "ext-PDO": "*"
     },
     "autoload": {
         "psr-4": {
