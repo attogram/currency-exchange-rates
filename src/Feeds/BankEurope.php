@@ -10,15 +10,6 @@ use function preg_match;
 
 final class BankEurope extends Feed {
 
-    /**
-     * BankEurope constructor.
-     * @param string $api
-     */
-    public function __construct(string $api)
-    {
-        $this->api = $api;
-    }
-
     public function process()
     {
         $raw = $this->get();

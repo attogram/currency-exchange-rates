@@ -12,15 +12,6 @@ use function str_replace;
 
 final class BankRussia extends Feed {
 
-    /**
-     * BankRussia constructor.
-     * @param string $api
-     */
-    public function __construct(string $api)
-    {
-        $this->api = $api;
-    }
-
     public function process()
     {
         $raw = $this->get();

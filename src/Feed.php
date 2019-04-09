@@ -11,6 +11,14 @@ class Feed
     /** @var string */
     protected $api = '';
 
+    /**
+     * @param string $api
+     */
+    public function __construct(string $api)
+    {
+        $this->api = $api;
+    }
+
     public function get() :string
     {
         if (empty($this->api)) {
@@ -32,7 +40,7 @@ class Feed
             return '';
         }
         $contents = $result->getBody()->getContents();
-        print "got: <hr>" . htmlentities($contents) . "<hr>";
+        //print "got: <hr>" . htmlentities($contents) . "<hr>";
 
         return $contents;
     }
@@ -64,10 +72,10 @@ class Feed
                 'feed' => $feed,
             ];
             print "\nData: " . print_r($bind, true);
-//            $result = $db->queryBool($sql, $bind);
-//            if (!$result) {
-//                print "\nERROR inserting " . implode(', ', $bind). "\n";
-//            }
+            $result = $db->queryBool($sql, $bind);
+            if (!$result) {
+                print "\nERROR inserting " . implode(', ', $bind). "\n";
+            }
         }
     }
 }

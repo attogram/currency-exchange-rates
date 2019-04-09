@@ -12,15 +12,6 @@ use function substr;
 
 class BankSwitzerland extends Feed {
 
-    /**
-     * BankSwitzerland constructor.
-     * @param string $api
-     */
-    public function __construct(string $api)
-    {
-        $this->api = $api;
-    }
-
     public function process()
     {
         $raw = $this->get();
