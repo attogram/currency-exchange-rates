@@ -7,7 +7,8 @@
     "require": {
         "attogram/router": "^4.0",
         "php": "^7.0",
-        "ext-PDO": "*"
+        "ext-PDO": "*",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "autoload": {
         "psr-4": {

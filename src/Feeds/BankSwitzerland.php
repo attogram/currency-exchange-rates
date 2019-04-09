@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Attogram\Currency\Feeds;
+namespace Attogram\Currency;
 
 use function explode;
 use function preg_match;

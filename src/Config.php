@@ -5,8 +5,28 @@ namespace Attogram\Currency;
 
 use function array_key_exists;
 
-class Feeds
+class Config
 {
+    /** @var array */
+    public static $currencies = [
+        'CHF' => [
+            'name' => 'Swiss Franc',
+        ],
+        'EUR' => [
+            'name' => 'Euro',
+        ],
+        'ILS' => [
+            'name' => 'New Israeli Sheqel',
+        ],
+        'RUB' => [
+            'name' => 'Russian Ruble',
+        ],
+        'USD' => [
+            'name' => 'US Dollar',
+        ],
+    ];
+
+    /** @var array */
     public static $feeds = [
         'BankEurope' => [
             'currency' => 'EUR',
@@ -38,12 +58,25 @@ class Feeds
         ],
     ];
 
-    public static function isValidFeedCode(string $code)
+    /**
+     * @param string $code
+     * @return bool
+     */
+    public static function isValidCurrency(string $code = '') :bool
     {
-        if (array_key_exists($code, static::$feeds)) {
-            return true;
-        }
+        return array_key_exists($code, static::$currencies)
+            ? true
+            : false;
+    }
 
-        return false;
+    /**
+     * @param string $code
+     * @return bool
+     */
+    public static function isValidFeed(string $code = '') :bool
+    {
+        return array_key_exists($code, static::$feeds)
+            ? true
+            : false;
     }
 }

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace Attogram\Currency\Feeds;
+namespace Attogram\Currency;
 
-use Attogram\Currency\Database;
-use function file_get_contents;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\GuzzleException;
 
-class Feed implements FeedInterface
+class Feed
 {
     /** @var string */
     public $api = '';
@@ -16,15 +16,25 @@ class Feed implements FeedInterface
 
     public function get()
     {
+        $this->raw = '';
+
         if (empty($this->api)) {
             return;
         }
-        $this->raw = file_get_contents($this->api);
-    }
 
-    public function process()
-    {
-        return;
+        $client = new GuzzleClient();
+
+        try {
+            $result = $client->request('GET', $this->api);
+        } catch (GuzzleException $exception) {
+            return;
+        }
+
+        if ($result->getStatusCode() !== 200) {
+            return;
+        }
+
+        $this->raw = $result->getBody();
     }
 
     /**
@@ -33,10 +43,15 @@ class Feed implements FeedInterface
      * @param string $feed
      * @param array $rates
      */
-    public function insert(string $source = '', string $day = '', string $feed = '', array $rates = [])
-    {
+    public function insert(
+        string $source = '', 
+        string $day = '',
+        string $feed = '',
+        array $rates = []
+    ) {
+        $db = new Database();
         foreach ($rates as $target => $rate) {
-            Database::insert(
+           $db->insert(
                 '
                 INSERT OR REPLACE 
                 INTO rate (day, rate, source, target, feed) 

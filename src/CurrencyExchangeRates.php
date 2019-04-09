@@ -11,7 +11,7 @@ use function print_r;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.8-alpha';
+    const VERSION = '0.0.9-alpha';
 
     /** @var Database */
     private $db;
@@ -59,7 +59,6 @@ class CurrencyExchangeRates
     private function home()
     {
         print '<pre>
-
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
         
         
@@ -84,17 +83,15 @@ class CurrencyExchangeRates
     private function about()
     {
         print '<pre>
-
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        
         <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
         
         ';
-        foreach(Currencies::$currencies as $currencyCode => $currency) {
+        foreach(Config::$currencies as $currencyCode => $currency) {
             print "\n$currencyCode\n";
             print_r($currency);
         }
-        foreach(Feeds::$feeds as $feedCode => $feed) {
+        foreach(Config::$feeds as $feedCode => $feed) {
             print "\n$feedCode\n";
             print_r($feed);
         }
@@ -104,19 +101,17 @@ class CurrencyExchangeRates
     private function admin()
     {
         print '<pre>
-
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
+        <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>
         
-        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
         
+        <a href="get/BankSwitzerland/">get ' . Config::$feeds['BankSwitzerland']['name'] . '</a>
         
-        <a href="get/BankSwitzerland/">get ' . Feeds::$feeds['BankSwitzerland']['name'] . '</a>
+        <a href="get/BankEurope/">get ' . Config::$feeds['BankEurope']['name'] . '</a>
         
-        <a href="get/BankEurope/">get ' . Feeds::$feeds['BankEurope']['name'] . '</a>
+        <a href="get/BankIsrael/">get ' . Config::$feeds['BankIsrael']['name'] . '</a>
         
-        <a href="get/BankIsrael/">get ' . Feeds::$feeds['BankIsrael']['name'] . '</a>
-        
-        <a href="get/BankRussia/">get ' . Feeds::$feeds['BankRussia']['name'] . '</a>
+        <a href="get/BankRussia/">get ' . Config::$feeds['BankRussia']['name'] . '</a>
 
 
         <a href="database/">Database</a>
@@ -127,12 +122,10 @@ class CurrencyExchangeRates
     private function adminDatabase()
     {
         print '<pre>
-
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        
         <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>
+        <a href="' . $this->router->getHomeFull() . 'admin/database/">' . $this->router->getHomeFull() . 'admin/database/</a>
         
-        Admin: Database:
         
         <a href="./?create=1">Create Database</a>
         
@@ -160,7 +153,7 @@ class CurrencyExchangeRates
     private function adminGet()
     {
         $feed = $this->router->getVar(0);
-        if (!Feeds::isValidFeedCode($feed)) {
+        if (!Config::isValidFeed($feed)) {
             $this->error404('Feed Not Found');
 
             return;
@@ -169,9 +162,8 @@ class CurrencyExchangeRates
         $this->db = new Database();
 
         print '<pre>
-
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        
+        <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>
         <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
         
         ADMINGET ' . $feed . '
@@ -183,23 +175,31 @@ class CurrencyExchangeRates
     private function currency()
     {
         $currency = $this->router->getVar(0);
-        if (!Currencies::isValidCurrencyCode($currency)) {
+        if (!Config::isValidCurrency($currency)) {
             $this->error404();
 
             return;
         }
-        print "CURRENCY $currency";
+        print '<pre>
+        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
+        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
+        
+        CURRENCY ' . "$currency";
     }
 
     private function currencyPair()
     {
         $source = $this->router->getVar(0);
         $target = $this->router->getVar(1);
-        if (!Currencies::isValidCurrencyCode($source) || !Currencies::isValidCurrencyCode($target)) {
+        if (!Config::isValidCurrency($source) || !Config::isValidCurrency($target)) {
             $this->error404();
 
             return;
         }
-        print "CURRENCYPAIR $source $target";
+        print '<pre>
+        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
+        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
+        
+        CURRENCYPAIR ' . "$source $target";
     }
 }
