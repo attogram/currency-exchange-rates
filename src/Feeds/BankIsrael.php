@@ -7,9 +7,6 @@ use function preg_match;
 
 final class BankIsrael extends Feed implements FeedsInterface {
 
-    /**
-     * @throws \Exception
-     */
     public function process()
     {
         parent::process();

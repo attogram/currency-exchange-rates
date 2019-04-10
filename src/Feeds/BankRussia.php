@@ -5,14 +5,10 @@ namespace Attogram\Currency\Feeds;
 
 use function explode;
 use function preg_match;
-use function round;
 use function str_replace;
 
 final class BankRussia extends Feed implements FeedsInterface {
 
-    /**
-     * @throws \Exception
-     */
     public function process()
     {
         parent::process();
@@ -32,7 +28,7 @@ final class BankRussia extends Feed implements FeedsInterface {
             if (preg_match("/<Value>([[:graph:]]+)<\/Value>/", $line, $match) ) {
                 $rate = $match[1];
                 $rate = str_replace(',', '.', $rate);
-                $rate = round((1/$rate), 4);
+                $rate =(1/$rate);
                 $currency[$target] = $rate;
                 $target = false;
             }

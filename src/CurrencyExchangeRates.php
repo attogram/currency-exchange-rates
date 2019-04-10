@@ -13,7 +13,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.16-alpha';
+    const VERSION = '0.0.17-alpha';
 
     /** @var Router */
     private $router;

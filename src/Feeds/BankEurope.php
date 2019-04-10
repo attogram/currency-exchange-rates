@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Feeds;
 
-use function explode;
 use function preg_match;
 
 final class BankEurope extends Feed implements FeedsInterface {

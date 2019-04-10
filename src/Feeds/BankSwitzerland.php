@@ -3,16 +3,11 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Feeds;
 
-use Exception;
-
 use function preg_match;
 use function substr;
 
 class BankSwitzerland extends Feed implements FeedsInterface {
 
-    /**
-     * @throws Exception
-     */
     public function process()
     {
         parent::process();
