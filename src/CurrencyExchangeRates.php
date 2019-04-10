@@ -12,7 +12,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.11-alpha';
+    const VERSION = '0.0.12-alpha';
 
     /** @var Database */
     private $db;
@@ -56,7 +56,7 @@ class CurrencyExchangeRates
         </pre>';
     }
 
-    private function home()
+    protected function home()
     {
         print '<pre>
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
@@ -78,7 +78,7 @@ class CurrencyExchangeRates
         print '</pre>';
     }
 
-    private function admin()
+    protected function admin()
     {
         print '<pre>
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
@@ -94,7 +94,7 @@ class CurrencyExchangeRates
         print "\n\n\n</pre>";
     }
 
-    private function adminDatabase()
+    protected function adminDatabase()
     {
         print '<pre>
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
@@ -112,20 +112,22 @@ class CurrencyExchangeRates
 
         print '<pre>   Initialize Database: ';
         $this->db = new Database();
-        print $this->db->init()
+        print ($this->db->init()
             ? 'OK'
-            : 'ERROR';
+            : 'ERROR'
+        );
         print '</pre>';
 
         print '<pre>   Create Table: ';
-        print $this->db->createTables()
+        print ($this->db->createTables()
             ? 'OK'
-            : 'ERROR';
+            : 'ERROR'
+        );
         print '</pre>';
 
     }
 
-    private function adminFeed()
+    protected function adminFeed()
     {
         $feedCode = $this->router->getVar(0);
         if (!Config::isValidFeed($feedCode)) {
@@ -159,7 +161,7 @@ class CurrencyExchangeRates
         print "\n\n\n</pre>";
     }
 
-    private function currency()
+    protected function currency()
     {
         $currency = $this->router->getVar(0);
         if (!Config::isValidCurrency($currency)) {
@@ -174,7 +176,7 @@ class CurrencyExchangeRates
         CURRENCY ' . "$currency";
     }
 
-    private function currencyPair()
+    protected function currencyPair()
     {
         $source = $this->router->getVar(0);
         $target = $this->router->getVar(1);

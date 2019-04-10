@@ -6,6 +6,7 @@ namespace Attogram\Currency\Feeds;
 use Attogram\Currency\Database;
 use Exception;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\GuzzleException;
 
 class Feed
 {
@@ -23,7 +24,7 @@ class Feed
     /**
      * @return string
      * @throws Exception
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function get() :string
     {

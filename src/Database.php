@@ -3,11 +3,10 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency;
 
+use Exception;
 use PDO;
-use PDOException;
 
 use function in_array;
-use function print_r;
 
 class Database
 {
@@ -17,12 +16,19 @@ class Database
     /** @var string */
     public $dbFile = __DIR__ . '/../db/rates.sqlite';
 
+    /**
+     * Database constructor.
+     * @throws Exception
+     */
     public function __construct()
     {
+        if (!in_array('sqlite', PDO::getAvailableDrivers())) {
+            throw new Exception('sqlite driver not found');
+        }
         if ($this->init()) {
             return;
         }
-        // handle error
+        throw new Exception('database init failed');
     }
 
     /**
@@ -30,20 +36,10 @@ class Database
      */
     public function init() :bool
     {
-        if (!in_array('sqlite', PDO::getAvailableDrivers())) {
-            print "sqlite not available";
-            return false;
-        }
-        try {
             $this->db = new PDO('sqlite:'. $this->dbFile);
             $this->createTables();
 
             return true;
-        } catch(PDOException $e) {
-            print $e->getMessage();
-
-            return false;
-        }
     }
 
     /**
@@ -105,7 +101,7 @@ class Database
                 'target' TEXT NOT NULL,
                 'feed' TEXT NOT NULL, 
                 'last_updated' DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-                PRIMARY KEY ('day', 'feed', 'source', 'target')
+                PRIMARY KEY ('day', 'source', 'target', 'feed')
             )
         ");
     }
