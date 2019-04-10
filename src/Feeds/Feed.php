@@ -7,26 +7,45 @@ use Attogram\Currency\Database;
 use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
+use Throwable;
+
+use function explode;
 
 class Feed
 {
     /** @var string */
     protected $api = '';
 
+    /** @var string|array */
+    protected $raw;
+
+    /** @var array */
+    protected $data = [];
+
     /**
      * @param string $api
+     * @throws GuzzleException
+     * @throws Exception
      */
     public function __construct(string $api)
     {
-        $this->api = $api;
+        try {
+            $this->api = $api;
+            $this->get();
+            $this->process();
+            $this->insert();
+        } catch (Throwable $error) {
+            print "\nFEED ERROR: " . $error->getMessage();
+        }
     }
 
     /**
-     * @return string
+     * Get the feed into $this->raw
+     *
      * @throws Exception
      * @throws GuzzleException
      */
-    public function get() :string
+    public function get()
     {
         if (empty($this->api)) {
             throw new Exception('API undefined');
@@ -34,47 +53,46 @@ class Feed
         $client = new GuzzleClient();
         $result = $client->request('GET', $this->api);
         if ($result->getStatusCode() !== 200) {
-            throw new Exception("StatusCode = " . $result->getStatusCode());
+            throw new Exception('StatusCode ' . $result->getStatusCode());
         }
-        $contents = $result->getBody()->getContents();
-        //print "got: <hr>" . htmlentities($contents) . "<hr>";
-
-        return $contents;
+        $this->raw = $result->getBody()->getContents();
     }
 
     /**
-     * @param string $day
-     * @param string $source
-     * @param string $feed
-     * @param array $rates
+     * Process $this->raw into structured $this->data
+     *
      * @throws Exception
      */
-    public function insert(
-        string $day = '',
-        string $source = '',
-        string $feed = '',
-        array $rates = []
-    ) {
-        $db = new Database();
-        $sql = '
-            INSERT OR REPLACE 
-            INTO rates (day, rate, source, target, feed) 
-            VALUES (:day, :rate, :source, :target, :feed)
-        ';
-        foreach ($rates as $target => $rate) {
-            $bind = [
-                'day' => $day,
-                'rate' => $rate,
-                'source' => $source,
-                'target' => $target,
-                'feed' => $feed,
-            ];
+    public function process()
+    {
+        if (empty($this->raw)) {
+            throw new Exception('Raw Not Found');
+        }
+        $this->raw = explode("\n", $this->raw);
+        $this->data = [];
 
-            print "\nData: " . print_r($bind, true);
+        foreach ($this->raw as $line) {
+            print "\nraw: " . htmlentities($line);
+        }
 
-            if (!$db->queryBool($sql, $bind)) {
-                throw new Exception('ERROR inserting ' . print_r($bind, true));
-            }
+    }
+
+    /**
+     * Insert $this->data into database
+     *
+     * @throws Exception
+     */
+    public function insert() {
+        if (empty($this->data)) {
+            throw new Exception('Data Not Found');
+        }
+        $database = new Database();
+        foreach ($this->data as $bind) {
+            $database->queryRaw(
+                "INSERT OR REPLACE INTO rates ('day', 'rate', 'source', 'target', 'feed')"
+                . ' VALUES (:day, :rate, :source, :target, :feed)',
+                $bind
+            );
         }
     }
 }

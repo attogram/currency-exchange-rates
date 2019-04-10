@@ -8,19 +8,12 @@ use function preg_match;
 
 final class BankEurope extends Feed implements FeedsInterface {
 
-    /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     */
     public function process()
     {
-        $raw = $this->get();
-        if (!$raw || !is_string($raw)) {
-            return;
-        }
+        parent::process();
         $currency = [];
         $date = '';
-        foreach (explode("\n", $raw) as $line) {
+        foreach ($this->raw as $line) {
             if (preg_match("/time='([[:graph:]]+)'/", $line, $day)) {
                 $date = $day[1];
             }
@@ -30,6 +23,14 @@ final class BankEurope extends Feed implements FeedsInterface {
                 }
             }
         }
-        $this->insert($date, 'EUR', 'BankEurope', $currency);
+        foreach ($currency as $target => $rate) {
+            $this->data[] = [
+                'day' => $date,
+                'rate' => $rate,
+                'source' => 'EUR',
+                'target' => $target,
+                'feed' => 'BankEurope',
+            ];
+        }
     }
 }

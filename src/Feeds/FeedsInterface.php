@@ -7,10 +7,5 @@ interface FeedsInterface
 {
     public function get();
     public function process();
-    public function insert(
-        string $day = '',
-        string $source = '',
-        string $feed = '',
-        array $rates = []
-    );
+    public function insert();
 }

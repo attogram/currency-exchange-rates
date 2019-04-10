@@ -3,24 +3,19 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Feeds;
 
-use function explode;
 use function preg_match;
 
 final class BankIsrael extends Feed implements FeedsInterface {
 
     /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
      */
     public function process()
     {
-        $raw = $this->get();
-        if (!$raw || !is_string($raw)) {
-            return;
-        }
+        parent::process();
         $currency = [];
         $date = $currencyCode = '';
-        foreach (explode("\n", $raw) as $line) {
+        foreach ($this->raw as $line) {
             if (preg_match("/\<LAST_UPDATE\>([[:graph:]]+)\<\/LAST_UPDATE\>/", $line, $m)){
                 $date = $m[1];
             }
@@ -32,6 +27,14 @@ final class BankIsrael extends Feed implements FeedsInterface {
                 $currency[$currencyCode] = $rate;
             }
         }
-        $this->insert($date, 'ILS','BankIsrael', $currency);
+        foreach ($currency as $target => $rate) {
+            $this->data[] = [
+                'day' => $date,
+                'rate' => $rate,
+                'source' => 'ILS',
+                'target' => $target,
+                'feed' => 'BankIsrael',
+            ];
+        }
     }
 }

@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency;
 
-use Attogram\Currency\Feeds\FeedsInterface;
 use Attogram\Router\Router;
+use Exception;
 
 use function header;
 use function method_exists;
@@ -12,7 +12,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.12-alpha';
+    const VERSION = '0.0.13-alpha';
 
     /** @var Database */
     private $db;
@@ -28,7 +28,6 @@ class CurrencyExchangeRates
         $this->router->allow('/?/', 'currency');
         $this->router->allow('/?/?/', 'currencyPair');
         $this->router->allow('/admin/', 'admin');
-        $this->router->allow('/admin/database/', 'adminDatabase');
         $this->router->allow('/admin/feed/?/', 'adminFeed');
 
         $match = $this->router->match();
@@ -56,6 +55,9 @@ class CurrencyExchangeRates
         </pre>';
     }
 
+    /**
+     * @throws Exception
+     */
     protected function home()
     {
         print '<pre>
@@ -70,11 +72,12 @@ class CurrencyExchangeRates
         </pre>';
 
         $database = new Database();
-        $test = $database->queryArray(
+        print '<pre>Test: ';
+
+        $database->query(
             'SELECT * FROM rates ORDER BY last_updated DESC LIMIT 100'
         );
-        print '<pre>Test: ';
-        print_r($test);
+
         print '</pre>';
     }
 
@@ -89,42 +92,7 @@ class CurrencyExchangeRates
         foreach (Config::$feeds as $code => $feed) {
             print "\t" . '<a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n";
         }
-
-        print "\n\n\t" . '<a href="database/">Database</a>';
         print "\n\n\n</pre>";
-    }
-
-    protected function adminDatabase()
-    {
-        print '<pre>
-        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>
-        <a href="' . $this->router->getHomeFull() . 'admin/database/">' . $this->router->getHomeFull() . 'admin/database/</a>
-        
-        
-        <a href="./?create=1">Create Database</a>
-        
-        </pre>';
-
-        if (!$this->router->getGet('create')) {
-            return;
-        }
-
-        print '<pre>   Initialize Database: ';
-        $this->db = new Database();
-        print ($this->db->init()
-            ? 'OK'
-            : 'ERROR'
-        );
-        print '</pre>';
-
-        print '<pre>   Create Table: ';
-        print ($this->db->createTables()
-            ? 'OK'
-            : 'ERROR'
-        );
-        print '</pre>';
-
     }
 
     protected function adminFeed()
@@ -143,20 +111,18 @@ class CurrencyExchangeRates
             return;
         }
 
+        $api = Config::getFeedApi($feedCode);
+        $name = Config::getFeedName($feedCode);
+
         print '<pre>
         <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
         <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>
         <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>'
         . "\n\n";
 
-        $api = Config::getFeedApi($feedCode);
-        $name = Config::getFeedName($feedCode);
-
         print "\t\nFeed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
 
-        /** @var FeedsInterface $feed */
-        $feed = new $class($api);
-        $feed->process();
+        new $class($api);
 
         print "\n\n\n</pre>";
     }

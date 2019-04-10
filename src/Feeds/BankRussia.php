@@ -11,18 +11,14 @@ use function str_replace;
 final class BankRussia extends Feed implements FeedsInterface {
 
     /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
      */
     public function process()
     {
-        $raw = $this->get();
-        if (!$raw || !is_string($raw)) {
-            return;
-        }
+        parent::process();
         $currency = [];
-        $date = $xcurrency = '';
-        foreach (explode("\n", $raw) as $line) {
+        $date = $target = '';
+        foreach ($this->raw as $line) {
             if (preg_match("/Date=\"([[:graph:]]+)\"/", $line, $match) ) {
                 $date = $match[1];
                 $da = explode('.', $date);
@@ -30,17 +26,25 @@ final class BankRussia extends Feed implements FeedsInterface {
                 continue;
             }
             if (preg_match("/<CharCode>([[:alpha:]]+)<\/CharCode>/", $line, $match) ) {
-                $xcurrency = $match[1];
+                $target = $match[1];
                 continue;
             }
             if (preg_match("/<Value>([[:graph:]]+)<\/Value>/", $line, $match) ) {
                 $rate = $match[1];
                 $rate = str_replace(',', '.', $rate);
                 $rate = round((1/$rate), 4);
-                $currency[$xcurrency] = $rate;
-                $xcurrency = false;
+                $currency[$target] = $rate;
+                $target = false;
             }
         }
-        $this->insert($date, 'RUB','BankRussia', $currency);
+        foreach ($currency as $target => $rate) {
+            $this->data[] = [
+                'day' => $date,
+                'rate' => $rate,
+                'source' => 'RUB',
+                'target' => $target,
+                'feed' => 'BankRussia',
+            ];
+        }
     }
 }

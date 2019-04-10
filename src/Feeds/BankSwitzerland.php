@@ -3,27 +3,23 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Feeds;
 
-use function explode;
+use Exception;
+
 use function preg_match;
-use function round;
 use function substr;
 
 class BankSwitzerland extends Feed implements FeedsInterface {
 
     /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
+     * @throws Exception
      */
     public function process()
     {
-        $raw = $this->get();
-        if (!$raw || !is_string($raw)) {
-            return;
-        }
+        parent::process();
         $currency = [];
         $date = $rate = '';
         $count = 0;
-        foreach (explode("\n", $raw) as $line) {
+        foreach ($this->raw as $line) {
             if(preg_match("/\<dcterms\:created\>([[:graph:]]+)\<\/dcterms\:created\>/", $line,$m)) {
                 $date = $m[1];
                 $date = substr($date, 0, 10);
@@ -33,13 +29,21 @@ class BankSwitzerland extends Feed implements FeedsInterface {
             }
             if (preg_match("/\<cb:targetCurrency\>([[:graph:]]+)\<\/cb:targetCurrency\>/", $line, $m)) {
                 $currencyCode = $m[1];
-                $currency[$currencyCode] = round((1/$rate), 8);
+                $currency[$currencyCode] = (1/$rate);
                 $count++;
                 if ($count ==  4) {
                     break;
                 }
             }
         }
-        $this->insert($date, 'CHF','BankSwitzerland', $currency);
+        foreach ($currency as $target => $rate) {
+            $this->data[] = [
+                'day' => $date,
+                'rate' => $rate,
+                'source' => 'CHF',
+                'target' => $target,
+                'feed' => 'BankSwitzerland',
+            ];
+        }
     }
 }

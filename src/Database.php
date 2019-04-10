@@ -17,7 +17,6 @@ class Database
     public $dbFile = __DIR__ . '/../db/rates.sqlite';
 
     /**
-     * Database constructor.
      * @throws Exception
      */
     public function __construct()
@@ -25,75 +24,77 @@ class Database
         if (!in_array('sqlite', PDO::getAvailableDrivers())) {
             throw new Exception('sqlite driver not found');
         }
-        if ($this->init()) {
-            return;
+        $createTables = false;
+        if (!file_exists($this->dbFile)) {
+            touch($this->dbFile);
+            $createTables = true;
         }
-        throw new Exception('database init failed');
-    }
-
-    /**
-     * @return bool
-     */
-    public function init() :bool
-    {
-            $this->db = new PDO('sqlite:'. $this->dbFile);
+        if (!is_writable($this->dbFile)) {
+            throw new Exception('Database is not writeable');
+        }
+        $this->db = new PDO('sqlite:'. $this->dbFile);
+        if ($createTables) {
             $this->createTables();
-
-            return true;
+        }
     }
 
     /**
      * @param string $sql
      * @param array $bind
      * @return array
+     * @throws Exception
      */
-    public function queryArray(string $sql, array $bind = []) :array
+    public function query(string $sql, array $bind = []) :array
     {
+        print "\nquery $sql";
         $statement = $this->db->prepare($sql);
         if (!$statement) {
-            return [];
+            throw new Exception('prepare statement failed: ' . implode(', ', $this->db->errorInfo()));
         }
         foreach ($bind as $name => $value) {
+            print "\nquery bind $name = $value";
             $statement->bindParam($name, $value);
         }
         if (!$statement->execute()) {
-            return [];
+            throw new Exception('execute statement failed: ' . implode(', ', $this->db->errorInfo()));
         }
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         if (!$result && ($this->db->errorCode() != '00000')) {
-            $result = [];
+            throw new Exception('statement fetchAll failed: ' . implode(', ', $this->db->errorInfo()));
         }
 
+        print "\nquery result " . print_r($result, true);
         return $result;
     }
 
     /**
      * @param string $sql
      * @param array $bind
-     * @return bool
+     * @throws Exception
      */
-    function queryBool(string $sql, array $bind = []) :bool
+    function queryRaw(string $sql, array $bind = [])
     {
+        print "\nqueryRaw $sql";
         $statement = $this->db->prepare($sql);
         if (!$statement) {
-            //print "\nqueryBool: statement failed: " . print_r($this->db->errorInfo(), true) . "\n";
-
-            return false;
+            throw new Exception('prepare statement failed: ' . print_r($this->db->errorInfo()));
         }
         foreach ($bind as $name => $value) {
+            print "\nqueryRaw bind $name = $value";
             $statement->bindParam($name, $value);
         }
         if (!$statement->execute()) {
-            //print "\nqueryBool: execute failed\n";
-
-            return false;
+            throw new Exception('execute statement failed: ' . print_r($this->db->errorInfo()));
         }
 
-        return true;
+        print "\nqueryRaw lastInsertId: " . $this->db->lastInsertId();
     }
 
+    /**
+     * @throws Exception
+     */
     function createTables() {
-        return $this->queryBool("
+        $this->queryRaw("
             CREATE TABLE IF NOT EXISTS 'rates' (
                 'day' DATETIME NOT NULL,
                 'rate' NUMERIC,
