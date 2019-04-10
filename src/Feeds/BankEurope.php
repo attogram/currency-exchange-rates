@@ -25,11 +25,11 @@ final class BankEurope extends Feed implements FeedsInterface {
         }
         foreach ($currency as $target => $rate) {
             $this->data[] = [
-                'day' => $date,
-                'rate' => $rate,
-                'source' => 'EUR',
-                'target' => $target,
-                'feed' => 'BankEurope',
+                'd' => $date,
+                'r' => $rate,
+                's' => 'EUR',
+                't' => $target,
+                'f' => 'BankEurope',
             ];
         }
     }

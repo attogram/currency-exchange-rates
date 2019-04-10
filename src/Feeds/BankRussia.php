@@ -39,11 +39,11 @@ final class BankRussia extends Feed implements FeedsInterface {
         }
         foreach ($currency as $target => $rate) {
             $this->data[] = [
-                'day' => $date,
-                'rate' => $rate,
-                'source' => 'RUB',
-                'target' => $target,
-                'feed' => 'BankRussia',
+                'd' => $date,
+                'r' => $rate,
+                's' => 'RUB',
+                't' => $target,
+                'f' => 'BankRussia',
             ];
         }
     }

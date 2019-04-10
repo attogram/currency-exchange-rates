@@ -29,11 +29,11 @@ final class BankIsrael extends Feed implements FeedsInterface {
         }
         foreach ($currency as $target => $rate) {
             $this->data[] = [
-                'day' => $date,
-                'rate' => $rate,
-                'source' => 'ILS',
-                'target' => $target,
-                'feed' => 'BankIsrael',
+                'd' => $date,
+                'r' => $rate,
+                's' => 'ILS',
+                't' => $target,
+                'f' => 'BankIsrael',
             ];
         }
     }

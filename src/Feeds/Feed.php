@@ -88,9 +88,8 @@ class Feed
         }
         $database = new Database();
         foreach ($this->data as $bind) {
-            $database->queryRaw(
-                "INSERT OR REPLACE INTO rates ('day', 'rate', 'source', 'target', 'feed')"
-                . ' VALUES (:day, :rate, :source, :target, :feed)',
+            $database->insert(
+                'REPLACE INTO rates (day, rate, source, target, feed) VALUES (:d, :r, :s, :t, :f)',
                 $bind
             );
         }

@@ -38,11 +38,11 @@ class BankSwitzerland extends Feed implements FeedsInterface {
         }
         foreach ($currency as $target => $rate) {
             $this->data[] = [
-                'day' => $date,
-                'rate' => $rate,
-                'source' => 'CHF',
-                'target' => $target,
-                'feed' => 'BankSwitzerland',
+                'd' => $date,
+                'r' => $rate,
+                's' => 'CHF',
+                't' => $target,
+                'f' => 'BankSwitzerland',
             ];
         }
     }

@@ -72,29 +72,28 @@ class Database
      * @param array $bind
      * @throws Exception
      */
-    function queryRaw(string $sql, array $bind = [])
+    function insert(string $sql, array $bind = [])
     {
-        print "\nqueryRaw $sql";
         $statement = $this->db->prepare($sql);
         if (!$statement) {
-            throw new Exception('prepare statement failed: ' . print_r($this->db->errorInfo()));
+            throw new Exception(
+                'insert prepare statement failed: ' . print_r($this->db->errorInfo())
+            );
         }
-        foreach ($bind as $name => $value) {
-            print "\nqueryRaw bind $name = $value";
-            $statement->bindParam($name, $value);
+        $result = $statement->execute($bind);
+        if (!$result && ($this->db->errorCode() != '00000')) {
+            throw new Exception(
+                'insert execute statement failed: ' . $this->db->errorCode() . ' - ' . print_r($this->db->errorInfo())
+            );
         }
-        if (!$statement->execute()) {
-            throw new Exception('execute statement failed: ' . print_r($this->db->errorInfo()));
-        }
-
-        print "\nqueryRaw lastInsertId: " . $this->db->lastInsertId();
+        //print "\ninsert lastInsertId: " . $this->db->lastInsertId();
     }
 
     /**
      * @throws Exception
      */
     function createTables() {
-        $this->queryRaw("
+        $this->query("
             CREATE TABLE IF NOT EXISTS 'rates' (
                 'day' DATETIME NOT NULL,
                 'rate' NUMERIC,

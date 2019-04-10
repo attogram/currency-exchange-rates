@@ -5,6 +5,7 @@ namespace Attogram\Currency;
 
 use Attogram\Router\Router;
 use Exception;
+use Throwable;
 
 use function header;
 use function method_exists;
@@ -12,7 +13,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.13-alpha';
+    const VERSION = '0.0.14-alpha';
 
     /** @var Database */
     private $db;
@@ -32,8 +33,11 @@ class CurrencyExchangeRates
 
         $match = $this->router->match();
         if ($match && method_exists($this, $match)) {
-            $this->{$match}();
-
+            try {
+                $this->{$match}();
+            } catch (Throwable $error) {
+                print "\nERROR: " . $error->getMessage();
+            }
             return;
         }
         $this->error404();
@@ -68,17 +72,16 @@ class CurrencyExchangeRates
         <a href="ILS/">ILS</a>    <a href="ILS/USD/">ILS/USD</a>
         <a href="RUB/">RUB</a>    <a href="RUB/USD/">RUB/USD</a>
 
-        <a href="admin/">admin</a>
-        </pre>';
+        <a href="admin/">admin</a>';
 
         $database = new Database();
-        print '<pre>Test: ';
+        print "\n\nTest: ";
 
         $database->query(
-            'SELECT * FROM rates ORDER BY last_updated DESC LIMIT 100'
+            'SELECT * FROM rates ORDER BY last_updated DESC LIMIT 10'
         );
 
-        print '</pre>';
+        print "\n\n</pre>";
     }
 
     protected function admin()
