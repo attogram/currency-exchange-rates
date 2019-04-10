@@ -7,7 +7,6 @@ use Attogram\Currency\Database;
 use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
-use Throwable;
 
 use function explode;
 
@@ -16,8 +15,11 @@ class Feed
     /** @var string */
     protected $api = '';
 
-    /** @var string|array */
+    /** @var string */
     protected $raw;
+
+    /** @var array */
+    protected $lines = [];
 
     /** @var array */
     protected $data = [];
@@ -29,19 +31,16 @@ class Feed
      */
     public function __construct(string $api)
     {
-        try {
-            $this->api = $api;
-            print "\nGetting feed: " . $this->api;
-            $this->get();
-            print "\nProcessing " . strlen($this->raw) . " characters";
-            $this->process();
-            print "\nProcessing " . count($this->raw) . " lines";
-            print "\nInserting " . count($this->data) . " entries";
-            $this->insert();
-            print "\nDONE.";
-        } catch (Throwable $error) {
-            print "\nERROR: " . $error->getMessage();
-        }
+        $this->api = $api;
+        print "\nGetting feed: " . $this->api;
+        $this->get();
+        print "\nProcessing " . strlen($this->raw) . " characters";
+        $this->process();
+        print "\nProcessing " . count($this->lines) . " lines";
+        print "\nInserting " . count($this->data) . " entries";
+        $this->insert();
+        print "\nDONE.";
+
     }
 
     /**
@@ -52,7 +51,7 @@ class Feed
      */
     public function get()
     {
-        if (empty($this->api)) {
+        if (empty($this->api) || !is_string($this->api)) {
             throw new Exception('API undefined');
         }
         $client = new GuzzleClient();
@@ -70,10 +69,10 @@ class Feed
      */
     public function process()
     {
-        if (empty($this->raw)) {
+        if (empty($this->raw) || !is_string($this->raw)) {
             throw new Exception('Raw Not Found');
         }
-        $this->raw = explode("\n", $this->raw);
+        $this->lines = explode("\n", $this->raw);
         $this->data = [];
     }
 
@@ -83,7 +82,7 @@ class Feed
      * @throws Exception
      */
     public function insert() {
-        if (empty($this->data)) {
+        if (empty($this->data) || !is_array($this->data)) {
             throw new Exception('Data Not Found');
         }
         $database = new Database();

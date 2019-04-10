@@ -18,7 +18,7 @@ final class BankRussia extends Feed implements FeedsInterface {
         parent::process();
         $currency = [];
         $date = $target = '';
-        foreach ($this->raw as $line) {
+        foreach ($this->lines as $line) {
             if (preg_match("/Date=\"([[:graph:]]+)\"/", $line, $match) ) {
                 $date = $match[1];
                 $da = explode('.', $date);

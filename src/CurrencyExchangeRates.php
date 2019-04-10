@@ -13,10 +13,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.15-alpha';
-
-    /** @var Database */
-    private $db;
+    const VERSION = '0.0.16-alpha';
 
     /** @var Router */
     private $router;
@@ -75,12 +72,21 @@ class CurrencyExchangeRates
         <a href="admin/">admin</a>';
 
         $database = new Database();
-        print "\n\nTest: ";
+        print "\n\nLast 100 rates:\ndate - rate - source - target - feed - last_updated";
 
-        $database->query(
-            'SELECT * FROM rates ORDER BY last_updated DESC LIMIT 10'
+        $rates = $database->query(
+            'SELECT * FROM rates ORDER BY last_updated DESC LIMIT 100'
         );
 
+        foreach ($rates as $rate) {
+            print "\n"
+                . $rate['day'] . ' - '
+                . $rate['rate'] . ' - '
+                . $rate['source'] . ' - '
+                . $rate['target'] . ' - '
+                . $rate['feed'] . ' - '
+                . $rate['last_updated'];
+        }
         print "\n\n</pre>";
     }
 

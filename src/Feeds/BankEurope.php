@@ -13,7 +13,7 @@ final class BankEurope extends Feed implements FeedsInterface {
         parent::process();
         $currency = [];
         $date = '';
-        foreach ($this->raw as $line) {
+        foreach ($this->lines as $line) {
             if (preg_match("/time='([[:graph:]]+)'/", $line, $day)) {
                 $date = $day[1];
             }

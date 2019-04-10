@@ -15,7 +15,7 @@ final class BankIsrael extends Feed implements FeedsInterface {
         parent::process();
         $currency = [];
         $date = $currencyCode = '';
-        foreach ($this->raw as $line) {
+        foreach ($this->lines as $line) {
             if (preg_match("/\<LAST_UPDATE\>([[:graph:]]+)\<\/LAST_UPDATE\>/", $line, $m)){
                 $date = $m[1];
             }

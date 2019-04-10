@@ -19,7 +19,7 @@ class BankSwitzerland extends Feed implements FeedsInterface {
         $currency = [];
         $date = $rate = '';
         $count = 0;
-        foreach ($this->raw as $line) {
+        foreach ($this->lines as $line) {
             if(preg_match("/\<dcterms\:created\>([[:graph:]]+)\<\/dcterms\:created\>/", $line,$m)) {
                 $date = $m[1];
                 $date = substr($date, 0, 10);

@@ -46,13 +46,13 @@ class Database
      */
     public function query(string $sql, array $bind = []) :array
     {
-        print "\nquery $sql";
+        //print "\nquery $sql";
         $statement = $this->db->prepare($sql);
         if (!$statement) {
             throw new Exception('prepare statement failed: ' . implode(', ', $this->db->errorInfo()));
         }
         foreach ($bind as $name => $value) {
-            print "\nquery bind $name = $value";
+            //print "\nquery bind $name = $value";
             $statement->bindParam($name, $value);
         }
         if (!$statement->execute()) {
@@ -63,7 +63,7 @@ class Database
             throw new Exception('statement fetchAll failed: ' . implode(', ', $this->db->errorInfo()));
         }
 
-        print "\nquery result " . print_r($result, true);
+        //print "\nquery result " . print_r($result, true);
         return $result;
     }
 
