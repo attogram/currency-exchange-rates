@@ -31,11 +31,16 @@ class Feed
     {
         try {
             $this->api = $api;
+            print "\nGetting feed: " . $this->api;
             $this->get();
+            print "\nProcessing " . strlen($this->raw) . " characters";
             $this->process();
+            print "\nProcessing " . count($this->raw) . " lines";
+            print "\nInserting " . count($this->data) . " entries";
             $this->insert();
+            print "\nDONE.";
         } catch (Throwable $error) {
-            print "\nFEED ERROR: " . $error->getMessage();
+            print "\nERROR: " . $error->getMessage();
         }
     }
 
@@ -70,11 +75,6 @@ class Feed
         }
         $this->raw = explode("\n", $this->raw);
         $this->data = [];
-
-        foreach ($this->raw as $line) {
-            print "\nraw: " . htmlentities($line);
-        }
-
     }
 
     /**

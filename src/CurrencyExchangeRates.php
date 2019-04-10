@@ -13,7 +13,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.14-alpha';
+    const VERSION = '0.0.15-alpha';
 
     /** @var Database */
     private $db;
