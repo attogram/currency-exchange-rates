@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Attogram\Currency;
+namespace Attogram\Currency\Feeds;
 
+use Attogram\Currency\Database;
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Exception\GuzzleException;
 
 class Feed
 {
@@ -19,25 +20,20 @@ class Feed
         $this->api = $api;
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function get() :string
     {
         if (empty($this->api)) {
-            //print "\nERROR: no api\n";
-            return '';
+            throw new Exception('API undefined');
         }
-
         $client = new GuzzleClient();
-
-        try {
-            $result = $client->request('GET', $this->api);
-        } catch (GuzzleException $exception) {
-            //print "\nERROR: " . $exception->getMessage() . "\n";
-            return '';
-        }
-
+        $result = $client->request('GET', $this->api);
         if ($result->getStatusCode() !== 200) {
-            //print "\nERROR: StatusCode = " . $result->getStatusCode() . "\n";
-            return '';
+            throw new Exception("StatusCode = " . $result->getStatusCode());
         }
         $contents = $result->getBody()->getContents();
         //print "got: <hr>" . htmlentities($contents) . "<hr>";
@@ -46,10 +42,11 @@ class Feed
     }
 
     /**
-     * @param string $source
      * @param string $day
+     * @param string $source
      * @param string $feed
      * @param array $rates
+     * @throws Exception
      */
     public function insert(
         string $day = '',
@@ -71,10 +68,11 @@ class Feed
                 'target' => $target,
                 'feed' => $feed,
             ];
+
             print "\nData: " . print_r($bind, true);
-            $result = $db->queryBool($sql, $bind);
-            if (!$result) {
-                print "\nERROR inserting " . implode(', ', $bind). "\n";
+
+            if (!$db->queryBool($sql, $bind)) {
+                throw new Exception('ERROR inserting ' . print_r($bind, true));
             }
         }
     }

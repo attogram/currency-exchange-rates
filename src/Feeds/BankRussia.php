@@ -3,15 +3,17 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Feeds;
 
-use Attogram\Currency\Feed;
-
 use function explode;
 use function preg_match;
 use function round;
 use function str_replace;
 
-final class BankRussia extends Feed {
+final class BankRussia extends Feed implements FeedsInterface {
 
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     */
     public function process()
     {
         $raw = $this->get();

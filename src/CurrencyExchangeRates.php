@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency;
 
+use Attogram\Currency\Feeds\FeedsInterface;
 use Attogram\Router\Router;
 
 use function header;
@@ -11,7 +12,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.10-alpha';
+    const VERSION = '0.0.11-alpha';
 
     /** @var Database */
     private $db;
@@ -65,10 +66,16 @@ class CurrencyExchangeRates
         <a href="ILS/">ILS</a>    <a href="ILS/USD/">ILS/USD</a>
         <a href="RUB/">RUB</a>    <a href="RUB/USD/">RUB/USD</a>
 
-        <a href="about/">about</a>
-        
         <a href="admin/">admin</a>
         </pre>';
+
+        $database = new Database();
+        $test = $database->queryArray(
+            'SELECT * FROM rates ORDER BY last_updated DESC LIMIT 100'
+        );
+        print '<pre>Test: ';
+        print_r($test);
+        print '</pre>';
     }
 
     private function admin()
@@ -144,9 +151,10 @@ class CurrencyExchangeRates
         $name = Config::getFeedName($feedCode);
 
         print "\t\nFeed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
-        print
 
-        (new $class($api))->process();
+        /** @var FeedsInterface $feed */
+        $feed = new $class($api);
+        $feed->process();
 
         print "\n\n\n</pre>";
     }
