@@ -13,7 +13,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.20-alpha';
+    const VERSION = '0.0.21-alpha';
 
     /** @var Router */
     private $router;
@@ -152,7 +152,9 @@ class CurrencyExchangeRates
             'SELECT * FROM rates WHERE source = :s AND target = :t ORDER BY last_updated DESC LIMIT 100',
             ['s' => $source, 't' => $target]
         );
-        print "$source/$target Rates:\n\n";
+        print '<a href="' . $this->router->getHome() . $source . '/">' . "$source</a>";
+        print '/<a href="' . $this->router->getHome() . $target . '/">' . "$target</a>";
+        print " Rates:\n\n";
         print $this->displayRates($rates);
         $this->displayFooter();
     }
