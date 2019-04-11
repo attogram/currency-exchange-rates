@@ -9,21 +9,42 @@ class Config
 {
     /** @var array */
     public static $currencies = [
-        'CHF' => [
-            'name' => 'Swiss Franc',
-        ],
-        'EUR' => [
-            'name' => 'Euro',
-        ],
-        'ILS' => [
-            'name' => 'New Israeli Sheqel',
-        ],
-        'RUB' => [
-            'name' => 'Russian Ruble',
-        ],
-        'USD' => [
-            'name' => 'US Dollar',
-        ],
+        'AUD' => ['name' => 'Australian Dollar'],
+        'BGN' => ['name' => 'Bulgarian Lev'],
+        'BRL' => ['name' => 'Brazilian Real'],
+        'CAD' => ['name' => 'Canadian Dollar'],
+        'CHF' => ['name' => 'Swiss Franc'],
+        'CNY' => ['name' => 'Chinese Yuan'],
+        'CZK' => ['name' => 'Czech Koruna'],
+        'DKK' => ['name' => 'Danish Krone'],
+        'EGP' => ['name' => 'Egyptian Pound'],
+        'EUR' => ['name' => 'Euro'],
+        'GBP' => ['name' => 'British Pound'],
+        'HKD' => ['name' => 'Hong Kong Dollar'],
+        'HRK' => ['name' => 'Croatian Kuna'],
+        'HUF' => ['name' => 'Hungarian Forint'],
+        'IDR' => ['name' => 'Indonesian Rupiah'],
+        'ILS' => ['name' => 'New Israeli Sheqel'],
+        'INR' => ['name' => 'Indian Rupee'],
+        'ISK' => ['name' => 'Icelandic Króna'],
+        'JOD' => ['name' => 'Jordanian Dinar'],
+        'JPY' => ['name' => 'Japanese Yen'],
+        'KRW' => ['name' => 'South Korean Won'],
+        'LBP' => ['name' => 'Lebanese Pound'],
+        'MXN' => ['name' => 'Mexican Peso'],
+        'MYR' => ['name' => 'Malaysian Ringgit'],
+        'NOK' => ['name' => 'Norwegian Krone'],
+        'NZD' => ['name' => 'New Zealand Dollar'],
+        'PHP' => ['name' => 'Philippine Piso'],
+        'PLN' => ['name' => 'Poland Złoty'],
+        'RON' => ['name' => 'Romanian Leu'],
+        'RUB' => ['name' => 'Russian Ruble'],
+        'SEK' => ['name' => 'Swedish Krona'],
+        'SGD' => ['name' => 'Singapore Dollar'],
+        'THB' => ['name' => 'Thai Baht'],
+        'TRY' => ['name' => 'Turkish Lira'],
+        'USD' => ['name' => 'United States Dollar'],
+        'ZAR' => ['name' => 'South African Rand'],
     ];
 
     /** @var array */

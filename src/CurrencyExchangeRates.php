@@ -13,7 +13,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.19-alpha';
+    const VERSION = '0.0.20-alpha';
 
     /** @var Router */
     private $router;
@@ -49,6 +49,32 @@ class CurrencyExchangeRates
     {
         $this->displayHeader();
         $database = new Database();
+
+        $sources = $database->query('SELECT DISTINCT source AS currency FROM rates ORDER BY source');
+        $targets = $database->query('SELECT DISTINCT target AS currency FROM rates ORDER BY target');
+        $currencies = array_merge($sources, $targets);
+        print count($currencies) . " Currencies:\n\n";
+        $bcount = 0;
+        foreach ($currencies as $currency) {
+            print '<a href="' . $this->router->getHome() . $currency['currency'] . '/">'
+                . $currency['currency'] . '</a>, ';
+            if (++$bcount > 15) {
+                print "\n";
+                $bcount = 0;
+            }
+        }
+        $pairs = $database->query('SELECT DISTINCT source, target FROM rates');
+        print "\n\n" . count($pairs) . " Currency Pairs:\n\n";
+        $bcount = 0;
+        foreach ($pairs as $pair) {
+            $upair = $pair['source'] . '/' . $pair['target'];
+            print '<a href="' . $this->router->getHome() . $upair . '/">' . $upair . '</a>, ';
+            if (++$bcount > 8) {
+                print "\n";
+                $bcount = 0;
+            }
+        }
+        print "\n\nLatest rates:\n\n";
         $rates = $database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT 100');
         print $this->displayRates($rates);
         $this->displayFooter();
@@ -158,7 +184,7 @@ class CurrencyExchangeRates
                 . round($rate['rate'], 10)
                 . ((strlen($rate['rate']) > 7) ? "\t" : "\t\t")
                 . '<a href="' . $this->router->getHome() . $rate['source'] . '/">' . $rate['source'] . "</a>\t"
-                . '<a href="' . $this->router->getHome() . $rate['target'] . '/">' . $rate['target'] . "</a>\t"
+                . '<a href="' . $this->router->getHome() . $rate['source'] . '/' . $rate['target'] . '">' . $rate['target'] . "</a>\t"
                 . '<small>'
                 . $rate['feed']
                 . ((strlen($rate['feed']) > 10) ? "\t" : "\t\t")
@@ -180,7 +206,8 @@ class CurrencyExchangeRates
 <title>Currency Exchange Rates</title>
 <style>
 body { margin:25px 50px 50px 50px; }
-a { color:darkblue; text-decoration:none; }
+a, a:visited { color:darkblue; text-decoration:none; }
+a:hover { color:black; background-color:yellow; }
 </style>
 </head>
 <body><pre>';
@@ -192,8 +219,9 @@ a { color:darkblue; text-decoration:none; }
     {
         print "\n\n-----------------------\n";
         $this->displayMenu();
-        print "\n\n" . gmdate('Y-m-d H:i:s') . " UTC\n\n";
-        print '<a href="' . $this->gitRepo . '">' . $this->gitRepo . "</a>\n\n";
+        print "\n\n";
+        print '<a href="' . $this->gitRepo . '">v' . self::VERSION . "</a>\n\n";
+        print gmdate('Y-m-d H:i:s') . " UTC\n\n";
         print '</pre></body></html>';
     }
 
