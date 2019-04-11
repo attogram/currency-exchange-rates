@@ -13,10 +13,12 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.18-alpha';
+    const VERSION = '0.0.19-alpha';
 
     /** @var Router */
     private $router;
+
+    private $gitRepo = 'https://github.com/attogram/currency-exchange-rates';
 
     public function route()
     {
@@ -149,15 +151,19 @@ class CurrencyExchangeRates
         if (empty($rates)) {
             return "Currency exchange rates not available\n";
         }
-        $display = "Date\t\tRate\tSource\tTarget\tFeed\t\tlast_updated\n";
+        $display = "Date\t\tRate \t\tSource\tTarget\t<small>Feed\t\t\tlast_updated</small>\n";
+        $display .= "----------\t------------\t---\t---\t<small>---------------\t-----------------------</small>\n";
         foreach ($rates as $rate) {
             $display .= $rate['day'] . "\t"
-                . $rate['rate'] . "\t"
-                . '<a href="' . $rate['source'] . '/">' . $rate['source'] . "</a>\t"
-                . '<a href="' . $rate['target'] . '/">' . $rate['target'] . "</a>\t"
-                . $rate['feed'] . "\t"
-                . $rate['last_updated']
-                . "\n";
+                . round($rate['rate'], 10)
+                . ((strlen($rate['rate']) > 7) ? "\t" : "\t\t")
+                . '<a href="' . $this->router->getHome() . $rate['source'] . '/">' . $rate['source'] . "</a>\t"
+                . '<a href="' . $this->router->getHome() . $rate['target'] . '/">' . $rate['target'] . "</a>\t"
+                . '<small>'
+                . $rate['feed']
+                . ((strlen($rate['feed']) > 10) ? "\t" : "\t\t")
+                . $rate['last_updated'] . ' UTC'
+                . "</small>\n";
         }
 
         return $display;
@@ -173,29 +179,21 @@ class CurrencyExchangeRates
 <head>
 <title>Currency Exchange Rates</title>
 <style>
-body { 
-    margin:25px 50px 50px 50px; 
-}
-a { 
-    color:darkblue; 
-    text-decoration:none; }
-hr {
-    border:0;
-    height:1px;
-    background:#333;
-    background-image:linear-gradient(to right, #ccc, #333, #ccc);
-}
+body { margin:25px 50px 50px 50px; }
+a { color:darkblue; text-decoration:none; }
 </style>
 </head>
 <body><pre>';
         $this->displayMenu($isAdmin);
-        print "\n<hr />\n";
+        print "\n-----------------------\n\n";
     }
 
     private function displayFooter()
     {
-        print "\n\n<hr />";
+        print "\n\n-----------------------\n";
         $this->displayMenu();
+        print "\n\n" . gmdate('Y-m-d H:i:s') . " UTC\n\n";
+        print '<a href="' . $this->gitRepo . '">' . $this->gitRepo . "</a>\n\n";
         print '</pre></body></html>';
     }
 
