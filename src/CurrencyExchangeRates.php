@@ -13,7 +13,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.17-alpha';
+    const VERSION = '0.0.18-alpha';
 
     /** @var Router */
     private $router;
@@ -41,67 +41,25 @@ class CurrencyExchangeRates
     }
 
     /**
-     * @param string $message
-     */
-    private function error404(string $message = 'Page Not Found')
-    {
-        header('HTTP/1.0 404 Not Found');
-        print '<pre>
-
-
-        404 ' . $message . '
-
-
-        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        </pre>';
-    }
-
-    /**
      * @throws Exception
      */
     protected function home()
     {
-        print '<pre>
-        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        
-        <a href="CHF/">CHF</a>    <a href="CHF/USD/">CHF/USD</a>
-        <a href="EUR/">EUR</a>    <a href="EUR/USD/">EUR/USD</a>
-        <a href="ILS/">ILS</a>    <a href="ILS/USD/">ILS/USD</a>
-        <a href="RUB/">RUB</a>    <a href="RUB/USD/">RUB/USD</a>
-
-        <a href="admin/">admin</a>';
-
+        $this->displayHeader();
         $database = new Database();
-        print "\n\nLast 100 rates:\ndate - rate - source - target - feed - last_updated";
-
-        $rates = $database->query(
-            'SELECT * FROM rates ORDER BY last_updated DESC LIMIT 100'
-        );
-
-        foreach ($rates as $rate) {
-            print "\n"
-                . $rate['day'] . ' - '
-                . $rate['rate'] . ' - '
-                . $rate['source'] . ' - '
-                . $rate['target'] . ' - '
-                . $rate['feed'] . ' - '
-                . $rate['last_updated'];
-        }
-        print "\n\n</pre>";
+        $rates = $database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT 100');
+        print $this->displayRates($rates);
+        $this->displayFooter();
     }
 
     protected function admin()
     {
-        print '<pre>
-        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>';
-
+        $this->displayHeader(true);
         print "\n\n\tFeeds:\n";
-
         foreach (Config::$feeds as $code => $feed) {
             print "\t" . '<a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n";
         }
-        print "\n\n\n</pre>";
+        $this->displayFooter();
     }
 
     protected function adminFeed()
@@ -112,30 +70,23 @@ class CurrencyExchangeRates
 
             return;
         }
-
         $class = "\\Attogram\\Currency\\Feeds\\" . $feedCode;
         if (!class_exists($class)) {
             $this->error404('Feed Class Not Found');
 
             return;
         }
-
+        $this->displayHeader(true);
         $api = Config::getFeedApi($feedCode);
         $name = Config::getFeedName($feedCode);
-
-        print '<pre>
-        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        <a href="' . $this->router->getHomeFull() . 'admin/">' . $this->router->getHomeFull() . 'admin/</a>
-        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>'
-        . "\n\n";
-
-        print "\t\nFeed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
-
+        print "Feed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
         new $class($api);
-
-        print "\n\n\n</pre>";
+        $this->displayFooter();
     }
 
+    /**
+     * @throws Exception
+     */
     protected function currency()
     {
         $currency = $this->router->getVar(0);
@@ -144,13 +95,20 @@ class CurrencyExchangeRates
 
             return;
         }
-        print '<pre>
-        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
-        
-        CURRENCY ' . "$currency";
+        $this->displayHeader();
+        $database = new Database();
+        $rates = $database->query(
+            'SELECT * FROM rates WHERE source = :s OR target = :t ORDER BY last_updated DESC LIMIT 100',
+            ['s' => $currency, 't' => $currency]
+        );
+        print "$currency Rates:\n\n";
+        print $this->displayRates($rates);
+        $this->displayFooter();
     }
 
+    /**
+     * @throws Exception
+     */
     protected function currencyPair()
     {
         $source = $this->router->getVar(0);
@@ -160,10 +118,96 @@ class CurrencyExchangeRates
 
             return;
         }
-        print '<pre>
-        <a href="' . $this->router->getHomeFull() . '">' . $this->router->getHomeFull() . '</a>
-        <a href="' . $this->router->getCurrentFull() . '">' . $this->router->getCurrentFull() . '</a>
-        
-        CURRENCYPAIR ' . "$source $target";
+        $this->displayHeader();
+        $database = new Database();
+        $rates = $database->query(
+            'SELECT * FROM rates WHERE source = :s AND target = :t ORDER BY last_updated DESC LIMIT 100',
+            ['s' => $source, 't' => $target]
+        );
+        print "$source/$target Rates:\n\n";
+        print $this->displayRates($rates);
+        $this->displayFooter();
     }
+
+    /**
+     * @param string $message
+     */
+    private function error404(string $message = 'Page Not Found')
+    {
+        header('HTTP/1.0 404 Not Found');
+        $this->displayHeader();
+        print "\n\n\n\n404 $message\n\n\n\n";
+        $this->displayFooter();
+    }
+
+    /**
+     * @param array $rates
+     * @return string
+     */
+    private function displayRates(array $rates)
+    {
+        if (empty($rates)) {
+            return "Currency exchange rates not available\n";
+        }
+        $display = "Date\t\tRate\tSource\tTarget\tFeed\t\tlast_updated\n";
+        foreach ($rates as $rate) {
+            $display .= $rate['day'] . "\t"
+                . $rate['rate'] . "\t"
+                . '<a href="' . $rate['source'] . '/">' . $rate['source'] . "</a>\t"
+                . '<a href="' . $rate['target'] . '/">' . $rate['target'] . "</a>\t"
+                . $rate['feed'] . "\t"
+                . $rate['last_updated']
+                . "\n";
+        }
+
+        return $display;
+    }
+
+    /**
+     * @param bool $isAdmin
+     */
+    private function displayHeader(bool $isAdmin = false)
+    {
+        print '
+<html lang="en">
+<head>
+<title>Currency Exchange Rates</title>
+<style>
+body { 
+    margin:25px 50px 50px 50px; 
+}
+a { 
+    color:darkblue; 
+    text-decoration:none; }
+hr {
+    border:0;
+    height:1px;
+    background:#333;
+    background-image:linear-gradient(to right, #ccc, #333, #ccc);
+}
+</style>
+</head>
+<body><pre>';
+        $this->displayMenu($isAdmin);
+        print "\n<hr />\n";
+    }
+
+    private function displayFooter()
+    {
+        print "\n\n<hr />";
+        $this->displayMenu();
+        print '</pre></body></html>';
+    }
+
+    /**
+     * @param bool $isAdmin
+     */
+    private function displayMenu(bool $isAdmin = false)
+    {
+        print '<a href="' . $this->router->getHomeFull() . '">Currency Exchange Rates</a>';
+        if ($isAdmin) {
+            print ' - <a href="' . $this->router->getHomeFull() . 'admin/">admin</a>';
+        }
+    }
+
 }

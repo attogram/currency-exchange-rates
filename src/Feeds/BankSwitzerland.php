@@ -24,7 +24,7 @@ class BankSwitzerland extends Feed implements FeedsInterface {
             }
             if (preg_match("/\<cb:targetCurrency\>([[:graph:]]+)\<\/cb:targetCurrency\>/", $line, $m)) {
                 $currencyCode = $m[1];
-                $currency[$currencyCode] = (1/$rate);
+                $currency[$currencyCode] = (1 / $rate);
                 $count++;
                 if ($count ==  4) {
                     break;

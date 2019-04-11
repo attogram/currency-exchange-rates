@@ -28,7 +28,7 @@ final class BankRussia extends Feed implements FeedsInterface {
             if (preg_match("/<Value>([[:graph:]]+)<\/Value>/", $line, $match) ) {
                 $rate = $match[1];
                 $rate = str_replace(',', '.', $rate);
-                $rate =(1/$rate);
+                $rate = (1 / $rate);
                 $currency[$target] = $rate;
                 $target = false;
             }
