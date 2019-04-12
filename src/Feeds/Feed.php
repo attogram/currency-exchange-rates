@@ -10,7 +10,7 @@ use GuzzleHttp\Exception\GuzzleException;
 
 use function explode;
 
-class Feed
+class Feed implements FeedsInterface
 {
     /** @var string */
     protected $api = '';
@@ -59,7 +59,7 @@ class Feed
         if ($result->getStatusCode() !== 200) {
             throw new Exception('StatusCode ' . $result->getStatusCode());
         }
-        $this->raw = $result->getBody()->getContents();
+        $this->raw = (string) $result->getBody();
     }
 
     /**

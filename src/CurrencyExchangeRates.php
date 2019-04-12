@@ -12,12 +12,15 @@ use function method_exists;
 
 class CurrencyExchangeRates
 {
+    use LocalCustomizationTrait;
+
     /** @var string Version*/
-    const VERSION = '0.0.22-alpha';
+    const VERSION = '0.0.23-alpha';
 
     /** @var Router */
     private $router;
 
+    /** @var string Git Repo For attogram/currency-exchange-rates */
     private $gitRepo = 'https://github.com/attogram/currency-exchange-rates';
 
     public function route()
@@ -74,7 +77,7 @@ class CurrencyExchangeRates
                 $bcount = 0;
             }
         }
-        print "\n\nLatest rates:\n\n";
+        print "\n\nLatest rates as of " . gmdate('Y-m-d H:i:s') . " UTC:\n\n";
         $rates = $database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT ' . count($pairs));
         print $this->displayRates($rates);
         $this->displayFooter();
@@ -82,7 +85,7 @@ class CurrencyExchangeRates
 
     protected function admin()
     {
-        $this->displayHeader(true);
+        $this->displayHeader();
         print "Feeds:\n\n";
         foreach (Config::$feeds as $code => $feed) {
             print '<a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n\n";
@@ -104,7 +107,7 @@ class CurrencyExchangeRates
 
             return;
         }
-        $this->displayHeader(true);
+        $this->displayHeader();
         $api = Config::getFeedApi($feedCode);
         $name = Config::getFeedName($feedCode);
         print "Feed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
@@ -179,32 +182,31 @@ class CurrencyExchangeRates
         if (empty($rates)) {
             return '';
         }
-        $display = "Date\t\tRate \t\tSource\tTarget\t<small>Feed\t\t\tlast_updated</small>\n";
-        $display .= "----------\t------------\t---\t---\t<small>---------------\t-----------------------</small>\n";
+        $display = "Day\t\tRate \t\tSource\tTarget\t<small>Feed</small>\n";
+        $display .= "----------\t------------\t---\t---\t<small>-----------------------------------------</small>\n";
         foreach ($rates as $rate) {
             $display .= $rate['day'] . "\t"
                 . round($rate['rate'], 10)
                 . ((strlen($rate['rate']) > 7) ? "\t" : "\t\t")
                 . '<a href="' . $this->router->getHome() . $rate['source'] . '/">' . $rate['source'] . "</a>\t"
-                . '<a href="' . $this->router->getHome() . $rate['source'] . '/' . $rate['target'] . '">' . $rate['target'] . "</a>\t"
+                . '<a href="' . $this->router->getHome() . $rate['target'] . '/">' . $rate['target'] . "</a>\t"
                 . '<small>'
-                . $rate['feed']
-                . ((strlen($rate['feed']) > 10) ? "\t" : "\t\t")
-                . $rate['last_updated'] . ' UTC'
+                . $rate['last_updated'] . " UTC - " . $rate['feed']
                 . "</small>\n";
         }
 
         return $display;
     }
 
-    /**
-     * @param bool $isAdmin
-     */
-    private function displayHeader(bool $isAdmin = false)
+    private function displayHeader()
     {
+
         print '
+<!doctype html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>attogram/currency-exchange-rates</title>
 <style>
 body { margin:25px 50px 50px 50px; }
@@ -212,8 +214,10 @@ a, a:visited { color:darkblue; text-decoration:none; }
 a:hover { color:black; background-color:yellow; }
 </style>
 </head>
-<body><pre>';
-        $this->displayMenu($isAdmin);
+<body>';
+        $this->customHeader();
+        print'<pre>';
+        $this->displayMenu();
         print "\n\n";
     }
 
@@ -221,20 +225,15 @@ a:hover { color:black; background-color:yellow; }
     {
         print "\n\n\n";
         $this->displayMenu();
-        print ' - <a href="' . $this->gitRepo . '">v' . self::VERSION . '</a> - ';
-        print gmdate('Y-m-d H:i:s') . " UTC\n\n";
-        print '</pre></body></html>';
+        print ' - <a href="' . $this->gitRepo . '">v' . self::VERSION . "</a>\n\n";
+        print '</pre>';
+        $this->customFooter();
+        print '</body></html>';
     }
 
-    /**
-     * @param bool $isAdmin
-     */
-    private function displayMenu(bool $isAdmin = false)
+    private function displayMenu()
     {
         print '<b><a href="' . $this->router->getHomeFull() . '">attogram/currency-exchange-rates</a></b>';
-        //if ($isAdmin) {
-            print ' - <a href="' . $this->router->getHomeFull() . 'admin/">admin</a>';
-        //}
+        print ' - <a href="' . $this->router->getHomeFull() . 'admin/">admin</a>';
     }
-
 }
