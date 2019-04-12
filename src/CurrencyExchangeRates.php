@@ -15,7 +15,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.0.24-alpha';
+    const VERSION = '0.0.25-alpha';
 
     /** @var Router */
     protected $router;
@@ -36,9 +36,10 @@ class CurrencyExchangeRates
         $this->router->allow('/', 'home');
         $this->router->allow('/?/', 'currency');
         $this->router->allow('/?/?/', 'currencyPair');
-        $this->router->allow('/admin/', 'admin');
-        $this->router->allow('/admin/feed/?/', 'adminFeed');
-
+        if ($this->isAdmin()) {
+            $this->router->allow('/admin/', 'admin');
+            $this->router->allow('/admin/feed/?/', 'adminFeed');
+        }
         $match = $this->router->match();
         if ($match && method_exists($this, $match)) {
             try {
@@ -242,5 +243,23 @@ a:hover { color:black; background-color:yellow; }
     protected function displayMenu()
     {
         print '<b><a href="' . $this->router->getHomeFull() . '">' . $this->config['title'] . '</a></b>';
+        if ($this->isAdmin()) {
+            print ' - <b><a href="' . $this->router->getHomeFull() . 'admin/">admin</a></b>';
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isAdmin()
+    {
+        if (is_string($this->config['adminIP'])
+            && $this->config['adminIP']
+            && $this->config['adminIP'] === $this->router->getServer('REMOTE_ADDR')
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
