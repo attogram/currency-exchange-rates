@@ -13,7 +13,7 @@ use function method_exists;
 class CurrencyExchangeRates
 {
     /** @var string Version*/
-    const VERSION = '0.0.21-alpha';
+    const VERSION = '0.0.22-alpha';
 
     /** @var Router */
     private $router;
@@ -75,7 +75,7 @@ class CurrencyExchangeRates
             }
         }
         print "\n\nLatest rates:\n\n";
-        $rates = $database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT 100');
+        $rates = $database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT ' . count($pairs));
         print $this->displayRates($rates);
         $this->displayFooter();
     }
@@ -83,9 +83,9 @@ class CurrencyExchangeRates
     protected function admin()
     {
         $this->displayHeader(true);
-        print "\n\n\tFeeds:\n";
+        print "Feeds:\n\n";
         foreach (Config::$feeds as $code => $feed) {
-            print "\t" . '<a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n";
+            print '<a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n\n";
         }
         $this->displayFooter();
     }
@@ -177,7 +177,7 @@ class CurrencyExchangeRates
     private function displayRates(array $rates)
     {
         if (empty($rates)) {
-            return "Currency exchange rates not available\n";
+            return '';
         }
         $display = "Date\t\tRate \t\tSource\tTarget\t<small>Feed\t\t\tlast_updated</small>\n";
         $display .= "----------\t------------\t---\t---\t<small>---------------\t-----------------------</small>\n";
@@ -205,7 +205,7 @@ class CurrencyExchangeRates
         print '
 <html lang="en">
 <head>
-<title>Currency Exchange Rates</title>
+<title>attogram/currency-exchange-rates</title>
 <style>
 body { margin:25px 50px 50px 50px; }
 a, a:visited { color:darkblue; text-decoration:none; }
@@ -214,15 +214,14 @@ a:hover { color:black; background-color:yellow; }
 </head>
 <body><pre>';
         $this->displayMenu($isAdmin);
-        print "\n-----------------------\n\n";
+        print "\n\n";
     }
 
     private function displayFooter()
     {
-        print "\n\n-----------------------\n";
+        print "\n\n\n";
         $this->displayMenu();
-        print "\n\n";
-        print '<a href="' . $this->gitRepo . '">v' . self::VERSION . "</a>\n\n";
+        print ' - <a href="' . $this->gitRepo . '">v' . self::VERSION . '</a> - ';
         print gmdate('Y-m-d H:i:s') . " UTC\n\n";
         print '</pre></body></html>';
     }
@@ -232,10 +231,10 @@ a:hover { color:black; background-color:yellow; }
      */
     private function displayMenu(bool $isAdmin = false)
     {
-        print '<a href="' . $this->router->getHomeFull() . '">Currency Exchange Rates</a>';
-        if ($isAdmin) {
+        print '<b><a href="' . $this->router->getHomeFull() . '">attogram/currency-exchange-rates</a></b>';
+        //if ($isAdmin) {
             print ' - <a href="' . $this->router->getHomeFull() . 'admin/">admin</a>';
-        }
+        //}
     }
 
 }
