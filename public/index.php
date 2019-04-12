@@ -11,4 +11,4 @@ if (!is_readable($autoload)) {
 /** @noinspection PhpIncludeInspection */
 require_once $autoload;
 
-(new CurrencyExchangeRates())->route();
+new CurrencyExchangeRates();

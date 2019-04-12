@@ -12,18 +12,24 @@ use function method_exists;
 
 class CurrencyExchangeRates
 {
-    use LocalCustomizationTrait;
+    use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.0.23-alpha';
+    const VERSION = '0.0.24-alpha';
 
     /** @var Router */
-    private $router;
+    protected $router;
 
-    /** @var string Git Repo For attogram/currency-exchange-rates */
-    private $gitRepo = 'https://github.com/attogram/currency-exchange-rates';
+    /** @var string Git Repository */
+    protected $gitRepo = 'https://github.com/attogram/currency-exchange-rates';
 
-    public function route()
+    public function __construct()
+    {
+        $this->loadConfig();
+        $this->route();
+    }
+
+    protected function route()
     {
         $this->router = new Router();
         $this->router->setForceSlash(true);
@@ -56,28 +62,28 @@ class CurrencyExchangeRates
         $sources = $database->query('SELECT DISTINCT source AS currency FROM rates ORDER BY source');
         $targets = $database->query('SELECT DISTINCT target AS currency FROM rates ORDER BY target');
         $currencies = array_merge($sources, $targets);
-        print count($currencies) . " Currencies:\n\n";
-        $bcount = 0;
+        print count($currencies) . " Currencies\n\n";
+        $break = 0;
         foreach ($currencies as $currency) {
             print '<a href="' . $this->router->getHome() . $currency['currency'] . '/">'
                 . $currency['currency'] . '</a>, ';
-            if (++$bcount > 15) {
+            if (++$break > 15) {
                 print "\n";
-                $bcount = 0;
+                $break = 0;
             }
         }
         $pairs = $database->query('SELECT DISTINCT source, target FROM rates');
-        print "\n\n" . count($pairs) . " Currency Pairs:\n\n";
-        $bcount = 0;
+        print "\n\n" . count($pairs) . " Currency Pairs\n\n";
+        $break = 0;
         foreach ($pairs as $pair) {
             $upair = $pair['source'] . '/' . $pair['target'];
             print '<a href="' . $this->router->getHome() . $upair . '/">' . $upair . '</a>, ';
-            if (++$bcount > 8) {
+            if (++$break > 8) {
                 print "\n";
-                $bcount = 0;
+                $break = 0;
             }
         }
-        print "\n\nLatest rates as of " . gmdate('Y-m-d H:i:s') . " UTC:\n\n";
+        print "\n\nExchange rates as of " . gmdate('Y-m-d H:i:s') . " UTC\n\n";
         $rates = $database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT ' . count($pairs));
         print $this->displayRates($rates);
         $this->displayFooter();
@@ -165,7 +171,7 @@ class CurrencyExchangeRates
     /**
      * @param string $message
      */
-    private function error404(string $message = 'Page Not Found')
+    protected function error404(string $message = 'Page Not Found')
     {
         header('HTTP/1.0 404 Not Found');
         $this->displayHeader();
@@ -177,7 +183,7 @@ class CurrencyExchangeRates
      * @param array $rates
      * @return string
      */
-    private function displayRates(array $rates)
+    protected function displayRates(array $rates)
     {
         if (empty($rates)) {
             return '';
@@ -198,7 +204,7 @@ class CurrencyExchangeRates
         return $display;
     }
 
-    private function displayHeader()
+    protected function displayHeader()
     {
 
         print '
@@ -207,7 +213,7 @@ class CurrencyExchangeRates
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>attogram/currency-exchange-rates</title>
+<title>' . $this->config['title'] . '</title>
 <style>
 body { margin:25px 50px 50px 50px; }
 a, a:visited { color:darkblue; text-decoration:none; }
@@ -215,25 +221,26 @@ a:hover { color:black; background-color:yellow; }
 </style>
 </head>
 <body>';
-        $this->customHeader();
+        $this->includeCustom('header.php');
         print'<pre>';
         $this->displayMenu();
         print "\n\n";
     }
 
-    private function displayFooter()
+    protected function displayFooter()
     {
         print "\n\n\n";
         $this->displayMenu();
-        print ' - <a href="' . $this->gitRepo . '">v' . self::VERSION . "</a>\n\n";
+        print "\n\n\n";
+        print '<small>Powered by <a href="' . $this->gitRepo . '">attogram/currency-exchange-rates</a>';
+        print ' v' . self::VERSION . "</small>\n\n";
         print '</pre>';
-        $this->customFooter();
+        $this->includeCustom('footer.php');
         print '</body></html>';
     }
 
-    private function displayMenu()
+    protected function displayMenu()
     {
-        print '<b><a href="' . $this->router->getHomeFull() . '">attogram/currency-exchange-rates</a></b>';
-        print ' - <a href="' . $this->router->getHomeFull() . 'admin/">admin</a>';
+        print '<b><a href="' . $this->router->getHomeFull() . '">' . $this->config['title'] . '</a></b>';
     }
 }
