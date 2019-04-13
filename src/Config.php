@@ -70,8 +70,7 @@ class Config
                 . ' 19 European Union countries: Austria, Belgium, Cyprus, Estonia, Finland,'
                 . ' France, Germany, Greece, Ireland, Italy, Latvia, Lithuania, Luxembourg,'
                 . ' Malta, The Netherlands, Portugal, Slovakia, Slovenia, and Spain.'
-                . ' The ECB was founded in 1998.'
-,
+                . ' The ECB was founded in 1998.',
         ],
         'BankSwitzerland' => [
             'currency' => 'CHF',

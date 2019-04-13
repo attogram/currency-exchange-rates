@@ -20,7 +20,7 @@
   * <http://www.bankofcanada.ca/stats/assets/rates_rss/closing/en_all.xml>
 * Reserve Bank of Australia
   * <http://www.rba.gov.au/rss/rss-cb-exchange-rates.xml>
-* Bank of Thailand 
+* Bank of Thailand
   * <http://www2.bot.or.th/RSS/fxrates/fxrate-all.xml>
 
 ## misc

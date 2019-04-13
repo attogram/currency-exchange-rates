@@ -8,7 +8,8 @@ checks:
       threshold: 4
   file-lines:
     config:
-      threshold: 250
+      #threshold: 250
+      threshold: 275
   method-complexity:
     config:
       #threshold: 5
@@ -54,8 +55,8 @@ plugins:
   phpmd:
     enabled: true
     checks:
-      CleanCode/StaticAccess: # allow Config::*, PDO::*
-        enabled: false
+      CleanCode/StaticAccess:
+        enabled: false # allow Config::*, PDO::*
   shellcheck:
     enabled: true
   sonar-php:
@@ -63,6 +64,8 @@ plugins:
     checks:
       php:S112:
         enabled: false # allow generic throw Exception
+      php:S125:
+        enabled: false # allow commented code
       php:S1192:
         enabled: false # allow duplicating literals
       php:S1848:
