@@ -15,7 +15,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.0-beta';
+    const VERSION = '0.1.1-beta';
 
     /** @var Router */
     protected $router;
@@ -189,27 +189,40 @@ class CurrencyExchangeRates
         if (empty($rates)) {
             return '';
         }
-        $display = "Day\t\tRate \t\tSource\tTarget\t<small>Feed</small>\n";
-        $display .= "----------\t------------\t---\t---\t<small>-----------------------------------------</small>\n";
+        $display = "-------  ----------\t-------  ----------\t----------    "
+            . "<small>----------------------------------------------------</small>\n";
         foreach ($rates as $rate) {
-            $display .= $rate['day'] . "\t"
-                . round($rate['rate'], 10)
-                . ((strlen($rate['rate']) > 7) ? "\t" : "\t\t")
-                . '<a href="' . $this->router->getHome() . $rate['source'] . '/">' . $rate['source'] . "</a>\t"
-                . '<a href="' . $this->router->getHome() . $rate['target'] . '/">' . $rate['target'] . "</a>\t"
-                . '<small>'
-                . $rate['last_updated'] . " UTC - " . $rate['feed']
-                . "</small>\n";
+            $display .= $this->displayRate($rate);
         }
 
         return $display;
     }
 
+    /**
+     * @param array $rate
+     * @return string
+     */
+    protected function displayRate(array $rate)
+    {
+        $pair = $rate['source'] . '/' . $rate['target'];
+        $pairRate = sprintf("%.8f", round($rate['rate'], 8));
+        $reverseRate = sprintf("%.8f", round((1 / $rate['rate']), 8));
+        return '<a href="' . $this->router->getHome() . $pair . '/">' . $pair . '</a>  '
+            . $pairRate
+            . "\t"
+            . '<a href="' . $this->router->getHome() . $rate['target'] . '/">' . $rate['target'] . '</a>/'
+            . '<a href="' . $this->router->getHome() . $rate['source'] . '/">' . $rate['source'] . '</a>  '
+            . $reverseRate
+            . "\t"
+            . $rate['day']
+            . '    <small>updated ' . $rate['last_updated'] . ' UTC from ' . $rate['feed'] . '</small>'
+            . "\n";
+    }
+
     protected function displayHeader()
     {
 
-        print '
-<!doctype html>
+        print '<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
