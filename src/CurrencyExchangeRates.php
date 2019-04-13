@@ -157,8 +157,8 @@ class CurrencyExchangeRates
             return;
         }
         $this->displayHeader();
-        $database = new Database();
-        $rates = $database->query(
+        $this->database = new Database();
+        $rates = $this->database->query(
             'SELECT * FROM rates WHERE source = :s OR target = :t ORDER BY last_updated DESC LIMIT 100',
             ['s' => $currency, 't' => $currency]
         );
@@ -180,8 +180,8 @@ class CurrencyExchangeRates
             return;
         }
         $this->displayHeader();
-        $database = new Database();
-        $rates = $database->query(
+        $this->database = new Database();
+        $rates = $this->database->query(
             'SELECT * FROM rates WHERE source = :s AND target = :t ORDER BY last_updated DESC LIMIT 100',
             ['s' => $source, 't' => $target]
         );
