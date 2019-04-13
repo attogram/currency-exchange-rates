@@ -3,19 +3,20 @@
 Beta Release
 [![Maintainability](https://api.codeclimate.com/v1/badges/c93e67dac8f094b3608f/maintainability)](https://codeclimate.com/github/attogram/currency-exchange-rates/maintainability)
 
-Website with daily currency exchage rates from:
+Currency Exchange Rates Website with data from: 
 
-* European Central Bank
-* Swiss National Bank
-* Bank of Israel
-* Central Bank of the Russian Federation
+* The European Central Bank
+* The Swiss National Bank
+* The Bank of Israel
+* The Central Bank of the Russian Federation
 
 Live Demo: **<https://getitdaily.com/rates/>**
 
 ## Info
 
-* Github: <https://github.com/attogram/currency-exchange-rates>
-* Packagist: <https://packagist.org/packages/attogram/currency-exchange-rates>
+* Stack: PHP 7, SQLite
+* Git: <https://github.com/attogram/currency-exchange-rates>
+* Composer: <https://packagist.org/packages/attogram/currency-exchange-rates>
 
 ## Install
 
