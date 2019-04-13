@@ -4,7 +4,6 @@
 * /about/ page
 * db migration script
 * unit tests
-* codeclimate checks
 * travis-ci build
 * full documentation
 * refactor feed processing to XPATH
