@@ -1,6 +1,8 @@
 # Attogram Currency Exchange Rates
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/c93e67dac8f094b3608f/maintainability)](https://codeclimate.com/github/attogram/currency-exchange-rates/maintainability)
+[![Latest Stable Version](https://poser.pugx.org/attogram/currency-exchange-rates/v/stable)](https://packagist.org/packages/attogram/router)
+[![Total Downloads](https://poser.pugx.org/attogram/currency-exchange-rates/downloads)](https://packagist.org/packages/attogram/router)
 
 Currency Exchange Rates Website with data from:
 
