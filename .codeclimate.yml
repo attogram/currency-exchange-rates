@@ -24,15 +24,33 @@ checks:
   return-statements:
     config:
       threshold: 4
-  similar-code:
-    config:
-      threshold: # language-specific defaults. an override will affect all languages.
-  identical-code:
-    config:
-      threshold: # language-specific defaults. an override will affect all languages.
+#  similar-code:
+#    config:
+#      threshold: # language-specific defaults. an override will affect all languages.
+#  identical-code:
+#    config:
+#      threshold: # language-specific defaults. an override will affect all languages.
 plugins:
+  fixme:
+    enabled: true
+  git-legal:
+    enabled: true
+  markdownlint:
+    enabled: true
+  phan:
+    enabled: true
+    config:
+      file_extensions: "php"
+  phpcodesniffer:
+    enabled: true
   phpmd:
     enabled: true
     checks:
       CleanCode/StaticAccess: # allow Config::*, PDO::*
         enabled: false
+  shellcheck:
+    enabled: true
+  sonar-php:
+    enabled: true
+  stylelint:
+    enabled: true
