@@ -1,7 +1,6 @@
 # Future Developments
 
 * CLI scripts for cron use
-* /about/ page
 * db migration script
 * unit tests
 * travis-ci build

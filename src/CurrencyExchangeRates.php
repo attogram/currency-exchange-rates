@@ -19,7 +19,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.9-beta';
+    const VERSION = '0.1.10-beta';
 
     /** @var Database|null */
     protected $database;
@@ -41,6 +41,8 @@ class CurrencyExchangeRates
         $this->router = new Router();
         $this->router->setForceSlash(true);
         $this->router->allow('/', 'home');
+        $this->router->allow('/about/', 'about');
+        $this->router->allow('/feed/?/', 'feedInfo');
         $this->router->allow('/?/', 'currency');
         $this->router->allow('/?/?/', 'currencyPair');
         if ($this->isAdmin()) {
@@ -71,6 +73,44 @@ class CurrencyExchangeRates
         print "\n\nExchange rates as of " . gmdate('Y-m-d H:i:s') . " UTC\n\n";
         $rates = $this->database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT ' . $pairCount);
         print $this->displayRates($rates);
+        $this->displayFooter();
+    }
+
+    protected function about()
+    {
+        $this->displayHeader();
+        print "This site incorporates currency exchange data from:\n\n";
+        foreach (Config::$feeds as $code => $feed) {
+            print ' - <a href="' . $this->router->getHome() . 'feed/' . $code . '">'
+                . 'The ' . $feed['name'] . '</a>'
+                . ' (<a href="' . $this->router->getHome() . $feed['currency'] . '/">'
+                . $feed['currency'] . '</a>)'
+                . "\n\n";
+        }
+        $this->displayFooter();
+    }
+
+    protected function feedInfo()
+    {
+        $feedCode = $this->router->getVar(0);
+        if (!Config::isValidFeed($feedCode)) {
+            $this->error404('Page Not Found');
+
+            return;
+        }
+
+        $this->displayHeader();
+        print 'About The ' . Config::$feeds[$feedCode]['name'] . "\n";
+        print '</pre>';
+        print Config::$feeds[$feedCode]['about'] . "\n\n";
+        print '<pre>';
+        print 'Currency: <b><a href="' . $this->router->getHome() . Config::$feeds[$feedCode]['currency']
+            . '/">' . Config::$feeds[$feedCode]['currency'] . "</a></b>\n\n";
+        print 'Website: <a href="' . Config::$feeds[$feedCode]['home'] . '">'
+            . Config::$feeds[$feedCode]['home'] . "</a>\n\n";
+        print 'API Endpoint:  <a href="' . Config::$feeds[$feedCode]['api'] . '">'
+            . Config::$feeds[$feedCode]['api'] . "</a>\n";
+        print 'API Frequency: ' . Config::$feeds[$feedCode]['freq'] . "\n\n";
         $this->displayFooter();
     }
 
@@ -116,9 +156,9 @@ class CurrencyExchangeRates
     protected function admin()
     {
         $this->displayHeader();
-        print "Feeds:\n\n";
+        print "Retrieve Feed Data:\n\n";
         foreach (Config::$feeds as $code => $feed) {
-            print '<a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n\n";
+            print ' - <a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n\n";
         }
         $this->displayFooter();
     }
@@ -260,7 +300,7 @@ a:hover { color:black; background-color:yellow; }
         $this->includeCustom('header.php');
         print'<pre>';
         $this->displayMenu();
-        print "\n\n";
+        print "\n\n\n";
     }
 
     protected function displayFooter()
@@ -278,8 +318,9 @@ a:hover { color:black; background-color:yellow; }
     protected function displayMenu()
     {
         print '<b><a href="' . $this->router->getHomeFull() . '">' . $this->config['title'] . '</a></b>';
+        print ' - <a href="' . $this->router->getHomeFull() . 'about/">about</a></b>';
         if ($this->isAdmin()) {
-            print ' - <b><a href="' . $this->router->getHomeFull() . 'admin/">admin</a></b>';
+            print ' - <em><a href="' . $this->router->getHomeFull() . 'admin/">admin</a></em>';
         }
     }
 
