@@ -19,7 +19,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.10-beta';
+    const VERSION = '0.1.11-beta';
 
     /** @var Database|null */
     protected $database;
@@ -100,17 +100,74 @@ class CurrencyExchangeRates
         }
 
         $this->displayHeader();
-        print 'About The ' . Config::$feeds[$feedCode]['name'] . "\n";
-        print '</pre>';
-        print Config::$feeds[$feedCode]['about'] . "\n\n";
-        print '<pre>';
-        print 'Currency: <b><a href="' . $this->router->getHome() . Config::$feeds[$feedCode]['currency']
-            . '/">' . Config::$feeds[$feedCode]['currency'] . "</a></b>\n\n";
-        print 'Website: <a href="' . Config::$feeds[$feedCode]['home'] . '">'
-            . Config::$feeds[$feedCode]['home'] . "</a>\n\n";
-        print 'API Endpoint:  <a href="' . Config::$feeds[$feedCode]['api'] . '">'
-            . Config::$feeds[$feedCode]['api'] . "</a>\n";
-        print 'API Frequency: ' . Config::$feeds[$feedCode]['freq'] . "\n\n";
+        print 'About The ' . Config::$feeds[$feedCode]['name'] . "\n"
+            . '</pre>'
+            . Config::$feeds[$feedCode]['about'] . "\n\n"
+            . '<pre>'
+            . 'Currency: <b><a href="' . $this->router->getHome() . Config::$feeds[$feedCode]['currency']
+            . '/">' . Config::$feeds[$feedCode]['currency'] . "</a></b>\n\n"
+            . 'Website: <a href="' . Config::$feeds[$feedCode]['home'] . '">'
+            . Config::$feeds[$feedCode]['home'] . "</a>\n\n"
+            . 'API Endpoint:  <a href="' . Config::$feeds[$feedCode]['api'] . '">'
+            . Config::$feeds[$feedCode]['api'] . "</a>\n"
+            . 'API Frequency: ' . Config::$feeds[$feedCode]['freq'] . "\n\n";
+        $this->displayFooter();
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function currency()
+    {
+        $currency = $this->router->getVar(0);
+        if (!Config::isValidCurrency($currency)) {
+            $this->error404();
+
+            return;
+        }
+        $this->displayHeader();
+        $this->database = new Database();
+        $rates = $this->database->query(
+            'SELECT * FROM rates WHERE source = :s OR target = :t ORDER BY last_updated DESC LIMIT 100',
+            ['s' => $currency, 't' => $currency]
+        );
+        print "$currency Rates:\n\n" . $this->displayRates($rates);
+        $this->displayFooter();
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function currencyPair()
+    {
+        $source = $this->router->getVar(0);
+        $target = $this->router->getVar(1);
+        if (!Config::isValidCurrency($source) || !Config::isValidCurrency($target)) {
+            $this->error404();
+
+            return;
+        }
+        $this->displayHeader();
+        $this->database = new Database();
+        $rates = $this->database->query(
+            'SELECT * FROM rates WHERE source = :s AND target = :t ORDER BY last_updated DESC LIMIT 100',
+            ['s' => $source, 't' => $target]
+        );
+        print '<a href="' . $this->router->getHome() . $source . '/">' . "$source</a>"
+            . '/<a href="' . $this->router->getHome() . $target . '/">' . "$target</a>"
+            . " Rates:\n\n"
+            . $this->displayRates($rates);
+        $this->displayFooter();
+    }
+
+    /**
+     * @param string $message
+     */
+    protected function error404(string $message = 'Page Not Found')
+    {
+        header('HTTP/1.0 404 Not Found');
+        $this->displayHeader();
+        print "\n\n\n\n404 $message\n\n\n\n";
         $this->displayFooter();
     }
 
@@ -151,96 +208,6 @@ class CurrencyExchangeRates
         }
 
         return count($pairs);
-    }
-
-    protected function admin()
-    {
-        $this->displayHeader();
-        print "Retrieve Feed Data:\n\n";
-        foreach (Config::$feeds as $code => $feed) {
-            print ' - <a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n\n";
-        }
-        $this->displayFooter();
-    }
-
-    protected function adminFeed()
-    {
-        $feedCode = $this->router->getVar(0);
-        if (!Config::isValidFeed($feedCode)) {
-            $this->error404('Feed Not Found');
-
-            return;
-        }
-        $class = "\\Attogram\\Currency\\Feeds\\" . $feedCode;
-        if (!class_exists($class)) {
-            $this->error404('Feed Class Not Found');
-
-            return;
-        }
-        $this->displayHeader();
-        $api = Config::getFeedApi($feedCode);
-        $name = Config::getFeedName($feedCode);
-        print "Feed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
-        new $class($api);
-        $this->displayFooter();
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function currency()
-    {
-        $currency = $this->router->getVar(0);
-        if (!Config::isValidCurrency($currency)) {
-            $this->error404();
-
-            return;
-        }
-        $this->displayHeader();
-        $this->database = new Database();
-        $rates = $this->database->query(
-            'SELECT * FROM rates WHERE source = :s OR target = :t ORDER BY last_updated DESC LIMIT 100',
-            ['s' => $currency, 't' => $currency]
-        );
-        print "$currency Rates:\n\n";
-        print $this->displayRates($rates);
-        $this->displayFooter();
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function currencyPair()
-    {
-        $source = $this->router->getVar(0);
-        $target = $this->router->getVar(1);
-        if (!Config::isValidCurrency($source) || !Config::isValidCurrency($target)) {
-            $this->error404();
-
-            return;
-        }
-        $this->displayHeader();
-        $this->database = new Database();
-        $rates = $this->database->query(
-            'SELECT * FROM rates WHERE source = :s AND target = :t ORDER BY last_updated DESC LIMIT 100',
-            ['s' => $source, 't' => $target]
-        );
-        print '<a href="' . $this->router->getHome() . $source . '/">' . "$source</a>";
-        print '/<a href="' . $this->router->getHome() . $target . '/">' . "$target</a>";
-        print " Rates:\n\n";
-        print $this->displayRates($rates);
-        $this->displayFooter();
-    }
-
-    /**
-     * @param string $message
-     */
-    protected function error404(string $message = 'Page Not Found')
-    {
-        header('HTTP/1.0 404 Not Found');
-        $this->displayHeader();
-        print "\n\n\n\n404 $message\n\n\n\n";
-        $this->displayFooter();
     }
 
     /**
@@ -307,10 +274,10 @@ a:hover { color:black; background-color:yellow; }
     {
         print "\n\n\n";
         $this->displayMenu();
-        print "\n\n\n";
-        print '<small>Powered by <a href="' . $this->gitRepo . '">attogram/currency-exchange-rates</a>';
-        print ' v' . self::VERSION . "</small>\n\n";
-        print '</pre>';
+        print "\n\n\n"
+            . '<small>Powered by <a href="' . $this->gitRepo . '">attogram/currency-exchange-rates</a>'
+            . ' v' . self::VERSION . "</small>\n\n"
+            . '</pre>';
         $this->includeCustom('footer.php');
         print '</body></html>';
     }
@@ -336,5 +303,37 @@ a:hover { color:black; background-color:yellow; }
         }
 
         return false;
+    }
+
+    protected function admin()
+    {
+        $this->displayHeader();
+        print "Retrieve Feed Data:\n\n";
+        foreach (Config::$feeds as $code => $feed) {
+            print ' - <a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n\n";
+        }
+        $this->displayFooter();
+    }
+
+    protected function adminFeed()
+    {
+        $feedCode = $this->router->getVar(0);
+        if (!Config::isValidFeed($feedCode)) {
+            $this->error404('Feed Not Found');
+
+            return;
+        }
+        $class = "\\Attogram\\Currency\\Feeds\\" . $feedCode;
+        if (!class_exists($class)) {
+            $this->error404('Feed Class Not Found');
+
+            return;
+        }
+        $this->displayHeader();
+        $api = Config::getFeedApi($feedCode);
+        $name = Config::getFeedName($feedCode);
+        print "Feed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
+        new $class($api);
+        $this->displayFooter();
     }
 }
