@@ -5,11 +5,11 @@
     "license": "MIT",
     "homepage": "https://github.com/attogram/currency-exchange-rates",
     "require": {
+        "php": "^7.0",
         "attogram/router": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
-        "php": "^7.0",
-        "ext-PDO": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "ext-PDO": "*"
     },
     "autoload": {
         "psr-4": {
