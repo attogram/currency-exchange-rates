@@ -87,7 +87,7 @@ class CurrencyExchangeRates
             if (in_array($code, $this->config['hidden'])) {
                 continue;
             }
-            print ' - <a href="' . $this->router->getHome() . 'about/' . $code . '">'
+            print ' - <a href="' . $this->router->getHome() . 'about/' . $code . '/">'
                 . 'The ' . $feed['name'] . '</a>' . ' (<a href="' . $this->router->getHome() . $feed['currency'] . '/">'
                 . $feed['currency'] . '</a>)' . "\n";
         }
@@ -111,11 +111,12 @@ class CurrencyExchangeRates
             return;
         }
         $this->displayHeader();
+        $currency = Config::$feeds[$feedCode]['currency'];
         print 'About The ' . Config::$feeds[$feedCode]['name'] . "\n"
             . '</pre>' . Config::$feeds[$feedCode]['about'] . "<pre>\n\n"
-            . 'Currency: <b><a href="' . $this->router->getHome() . Config::$feeds[$feedCode]['currency']
-            . '/">' . Config::$feeds[$feedCode]['currency'] . "</a></b>\n\n"
-            . $this->feedInfoPairs(Config::$feeds[$feedCode]['currency']) . "\n\n"
+            . 'Currency: <b><a href="' . $this->router->getHome() . $currency
+            . '/">' . $currency . '</a></b> (' . Config::getFeedCurrencyName($currency) . ")\n\n"
+            . $this->feedInfoPairs($currency) . "\n\n"
             . 'Website: <a href="'. Config::$feeds[$feedCode]['home'] . '">'
             . Config::$feeds[$feedCode]['home'] . "</a>\n\n"
             . 'API Endpoint:  <a href="' . Config::$feeds[$feedCode]['api'] . '">'
@@ -284,9 +285,9 @@ a:hover { color:black; background-color:yellow; }
     protected function displayMenu()
     {
         print '<b><a href="' . $this->router->getHomeFull() . '">' . $this->config['title'] . '</a></b>';
-        print ' - <a href="' . $this->router->getHomeFull() . 'about/">about</a></b>';
+        print '   <a href="' . $this->router->getHomeFull() . 'about/">about</a></b>';
         if ($this->isAdmin()) {
-            print ' - <em><a href="' . $this->router->getHomeFull() . 'admin/">admin</a></em>';
+            print '   <em><a href="' . $this->router->getHomeFull() . 'admin/">admin</a></em>';
         }
     }
 

@@ -10,6 +10,7 @@
 * add guzzle status to verbosity > 1 in admin Feeds
 * lower timeout, handle Uncaught GuzzleHttp\Exception\RequestException in admin Feeds
 * /about/ currency list from DB, use config only for name
+* custom config adminIP - allow multiple IPs
 
 ## new feeds
 
