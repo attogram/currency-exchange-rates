@@ -60,6 +60,8 @@ plugins:
     checks:
       php:S112:
         enabled: false # allow generic throw Exception
+      php:S1192:
+        enabled: false # allow duplicating literals
       php:S1848:
         enabled: false # allow  useless object instantiation
   stylelint:
