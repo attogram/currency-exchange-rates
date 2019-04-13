@@ -16,10 +16,10 @@ final class BankEurope extends Feed implements FeedsInterface
             if (preg_match("/time='([[:graph:]]+)'/", $line, $day)) {
                 $date = $day[1];
             }
-            if (preg_match("/currency='([[:alpha:]]+)'/", $line, $currencyCode)) {
-                if (preg_match("/rate='([[:graph:]]+)'/", $line, $rate)){
-                    $currency[$currencyCode[1]] = $rate[1];
-                }
+            if (preg_match("/currency='([[:alpha:]]+)'/", $line, $currencyCode)
+                && preg_match("/rate='([[:graph:]]+)'/", $line, $rate)
+            ) {
+                $currency[$currencyCode[1]] = $rate[1];
             }
         }
         foreach ($currency as $target => $rate) {

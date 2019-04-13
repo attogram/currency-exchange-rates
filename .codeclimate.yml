@@ -1,0 +1,6 @@
+engines:
+  phpmd:
+    enabled: true
+    checks:
+      CleanCode/StaticAccess: // allow Config::, PDO::
+        enabled: false
