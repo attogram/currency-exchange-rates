@@ -15,7 +15,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.2-beta';
+    const VERSION = '0.1.3-beta';
 
     /** @var Router */
     protected $router;
@@ -221,7 +221,6 @@ class CurrencyExchangeRates
 
     protected function displayHeader()
     {
-
         print '<!doctype html>
 <html lang="en">
 <head>

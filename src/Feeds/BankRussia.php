@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Attogram\Currency\Feeds;
 
 use function explode;
+use function mb_convert_encoding;
 use function preg_match;
 use function str_replace;
 
@@ -16,6 +17,7 @@ final class BankRussia extends Feed implements FeedsInterface {
             'UTF-8',
             'Windows-1251'
         );
+        $this->raw = str_replace('><', ">\n<", $this->raw);
     }
 
     public function process()
