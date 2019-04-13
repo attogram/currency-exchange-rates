@@ -25,35 +25,28 @@ class Feed implements FeedsInterface
     protected $data = [];
 
     /**
+     * Feed constructor.
      * @param string $api
-     * @throws GuzzleException
+     * @param bool $silent
      * @throws Exception
+     * @throws GuzzleException
      */
-    public function __construct(string $api)
+    public function __construct(string $api, bool $silent = false)
     {
         $this->api = $api;
-
-        print "\n\nGetting feed: " . $this->api;
-
+        print ($silent ? '' : "\n\nGetting feed: " . $this->api);
         $this->get();
-
-        print "\n\nGot " . strlen($this->raw) . " characters\n";
-        print '<textarea rows="5" cols="100">' . $this->raw . '</textarea>';
-
+        print ($silent ? '' : "\n\nGot " . strlen($this->raw) . " characters\n")
+            . ($silent ? '' : '<textarea rows="5" cols="100">' . $this->raw . '</textarea>');
         $this->transform();
-
-        print "\n\nTransformed to " . strlen($this->raw) . " characters\n";
-        print '<textarea rows="5" cols="100">' . $this->raw . '</textarea>';
-
+        print ($silent ? '' : "\n\nTransformed to " . strlen($this->raw) . " characters\n")
+            . ($silent ? '' : '<textarea rows="5" cols="100">' . $this->raw . '</textarea>');
         $this->process();
-
-        print "\n\nProcessed " . count($this->lines) . " lines\n";
-        print '<textarea rows="5" cols="100">' . print_r($this->lines, true) . '</textarea>';
-
+        print ($silent ? '' : "\n\nProcessed " . count($this->lines) . " lines\n")
+            . ($silent ? '' : '<textarea rows="5" cols="100">' . print_r($this->lines, true) . '</textarea>');
         $this->insert();
-
-        print "\n\nInserted " . count($this->data) . " entries\n";
-        print '<textarea rows="10" cols="100">' . print_r($this->data, true) . '</textarea>';
+        print ($silent ? '' : "\n\nInserted " . count($this->data) . " entries\n")
+            . ($silent ? '' : '<textarea rows="10" cols="100">' . print_r($this->data, true) . '</textarea>');
     }
 
     /**

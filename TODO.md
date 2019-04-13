@@ -1,6 +1,5 @@
 # Future Developments
 
-* CLI scripts for cron use
 * db migration script
 * per-page `<title>`
 * unit tests
