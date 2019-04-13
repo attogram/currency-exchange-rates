@@ -11,15 +11,13 @@ use function class_exists;
 use function count;
 use function header;
 use function method_exists;
-use function round;
-use function sprintf;
 
 class CurrencyExchangeRates
 {
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.11-beta';
+    const VERSION = '0.1.12-beta';
 
     /** @var Database|null */
     protected $database;
@@ -72,7 +70,7 @@ class CurrencyExchangeRates
         $pairCount = $this->displayCurrencyPairs();
         print "\n\nExchange rates as of " . gmdate('Y-m-d H:i:s') . " UTC\n\n";
         $rates = $this->database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT ' . $pairCount);
-        print $this->displayRates($rates);
+        print Format::formatRates($rates, $this->router->getHome());
         $this->displayFooter();
     }
 
@@ -131,7 +129,8 @@ class CurrencyExchangeRates
             'SELECT * FROM rates WHERE source = :s OR target = :t ORDER BY last_updated DESC LIMIT 100',
             ['s' => $currency, 't' => $currency]
         );
-        print "$currency Rates:\n\n" . $this->displayRates($rates);
+        print "$currency Rates:\n\n"
+            . Format::formatRates($rates, $this->router->getHome());
         $this->displayFooter();
     }
 
@@ -156,7 +155,7 @@ class CurrencyExchangeRates
         print '<a href="' . $this->router->getHome() . $source . '/">' . "$source</a>"
             . '/<a href="' . $this->router->getHome() . $target . '/">' . "$target</a>"
             . " Rates:\n\n"
-            . $this->displayRates($rates);
+            . Format::formatRates($rates, $this->router->getHome());
         $this->displayFooter();
     }
 
@@ -208,45 +207,6 @@ class CurrencyExchangeRates
         }
 
         return count($pairs);
-    }
-
-    /**
-     * @param array $rates
-     * @return string
-     */
-    protected function displayRates(array $rates)
-    {
-        if (empty($rates)) {
-            return '';
-        }
-        $display = "-------  ----------\t-------  ----------\t----------    "
-            . "<small>------------------------------------------------------</small>\n";
-        foreach ($rates as $rate) {
-            $display .= $this->displayRate($rate);
-        }
-
-        return $display;
-    }
-
-    /**
-     * @param array $rate
-     * @return string
-     */
-    protected function displayRate(array $rate)
-    {
-        $pair = $rate['source'] . '/' . $rate['target'];
-        $pairRate = sprintf("%.8f", round($rate['rate'], 8));
-        $reverseRate = sprintf("%.8f", round((1 / $rate['rate']), 8));
-        return '<a href="' . $this->router->getHome() . $pair . '/">' . $pair . '</a>  '
-            . $pairRate
-            . "\t"
-            . '<a href="' . $this->router->getHome() . $rate['target'] . '/">' . $rate['target'] . '</a>/'
-            . '<a href="' . $this->router->getHome() . $rate['source'] . '/">' . $rate['source'] . '</a>  '
-            . $reverseRate
-            . "\t"
-            . $rate['day']
-            . '    <small>retrieved ' . $rate['last_updated'] . ' UTC from ' . $rate['feed'] . '</small>'
-            . "\n";
     }
 
     protected function displayHeader()
