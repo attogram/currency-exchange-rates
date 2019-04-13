@@ -5,10 +5,10 @@ Beta Release
 
 Website with daily currency exchage rates from:
 
-  - European Central Bank
-  - Swiss National Bank
-  - Bank of Israel
-  - Central Bank of the Russian Federation
+* European Central Bank
+* Swiss National Bank
+* Bank of Israel
+* Central Bank of the Russian Federation
 
 Live Demo: **<https://getitdaily.com/rates/>**
 
@@ -21,7 +21,7 @@ Live Demo: **<https://getitdaily.com/rates/>**
 
 ### Install with Composer
 
-* `composer create-project attogram/currency-exchange-rates your-install-directory`
+* `composer create-project attogram/currency-exchange-rates your-install-directory `
 
 ### Install with Git
 
