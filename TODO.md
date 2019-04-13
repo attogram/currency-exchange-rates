@@ -11,6 +11,7 @@
 * lower timeout, handle Uncaught GuzzleHttp\Exception\RequestException in admin Feeds
 * /about/ currency list from DB, use config only for name
 * custom config adminIP - allow multiple IPs
+* option disable custom header/footer on 404 responses
 
 ## new feeds
 

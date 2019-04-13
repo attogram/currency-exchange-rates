@@ -57,6 +57,7 @@ class CurrencyExchangeRates
             } catch (Throwable $error) {
                 print "\nERROR: " . $error->getMessage();
             }
+
             return;
         }
         $this->error404();
@@ -119,9 +120,10 @@ class CurrencyExchangeRates
             . $this->feedInfoPairs($currency) . "\n\n"
             . 'Website: <a href="'. Config::$feeds[$feedCode]['home'] . '">'
             . Config::$feeds[$feedCode]['home'] . "</a>\n\n"
-            . 'API Endpoint:  <a href="' . Config::$feeds[$feedCode]['api'] . '">'
+            . 'API Endpoint: <a href="' . Config::$feeds[$feedCode]['api'] . '">'
             . Config::$feeds[$feedCode]['api'] . "</a>\n"
-            . 'API Frequency: ' . Config::$feeds[$feedCode]['freq'] . "\n\n";
+            . 'API Update Frequency: ' . Config::$feeds[$feedCode]['freq'] . "\n\n"
+            . 'Feed Code: ' . $feedCode . "\n\n";
         $this->displayFooter();
     }
 
@@ -207,7 +209,7 @@ class CurrencyExchangeRates
     {
         header('HTTP/1.0 404 Not Found');
         $this->displayHeader();
-        print "\n\n\n\n404 $message\n\n\n\n";
+        print "\n\n404 $message\n\n";
         $this->displayFooter();
     }
 
@@ -259,7 +261,7 @@ class CurrencyExchangeRates
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>' . $this->config['title'] . '</title>
 <style>
-body { margin:25px 25px 25px 25px; }
+body { margin:25px; }
 a, a:visited { color:darkblue; text-decoration:none; }
 a:hover { color:black; background-color:yellow; }
 </style>
