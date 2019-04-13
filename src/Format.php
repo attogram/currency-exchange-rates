@@ -13,7 +13,7 @@ class Format
      * @param string $home
      * @return string
      */
-    static function formatRates(array $rates, string $home)
+    public static function formatRates(array $rates, string $home)
     {
         if (empty($rates)) {
             return '';
@@ -33,7 +33,7 @@ class Format
      * @param string $home
      * @return string
      */
-    static function formatRate(array $rate, string $home)
+    public static function formatRate(array $rate, string $home)
     {
         $pair = $rate['source'] . '/' . $rate['target'];
         $pairRate = sprintf("%.8f", round($rate['rate'], 8));
