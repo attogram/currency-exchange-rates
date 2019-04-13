@@ -13,14 +13,14 @@ final class BankIsrael extends Feed implements FeedsInterface
         $currency = [];
         $date = $currencyCode = '';
         foreach ($this->lines as $line) {
-            if (preg_match("/\<LAST_UPDATE\>([[:graph:]]+)\<\/LAST_UPDATE\>/", $line, $m)) {
-                $date = $m[1];
+            if (preg_match("/\<LAST_UPDATE\>([[:graph:]]+)\<\/LAST_UPDATE\>/", $line, $match)) {
+                $date = $match[1];
             }
-            if (preg_match("/\<CURRENCYCODE\>([[:graph:]]+)\<\/CURRENCYCODE\>/", $line, $m)) {
-                $currencyCode = $m[1];
+            if (preg_match("/\<CURRENCYCODE\>([[:graph:]]+)\<\/CURRENCYCODE\>/", $line, $match)) {
+                $currencyCode = $match[1];
             }
-            if (preg_match("/\<RATE\>([[:graph:]]+)\<\/RATE\>/", $line, $m)) {
-                $rate = $m[1];
+            if (preg_match("/\<RATE\>([[:graph:]]+)\<\/RATE\>/", $line, $match)) {
+                $rate = $match[1];
                 $currency[$currencyCode] = $rate;
             }
         }

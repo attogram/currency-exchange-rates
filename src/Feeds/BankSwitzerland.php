@@ -15,18 +15,18 @@ class BankSwitzerland extends Feed implements FeedsInterface
         $date = $rate = '';
         $count = 0;
         foreach ($this->lines as $line) {
-            if (preg_match("/\<dcterms\:created\>([[:graph:]]+)\<\/dcterms\:created\>/", $line, $m)) {
-                $date = $m[1];
+            if (preg_match("/\<dcterms\:created\>([[:graph:]]+)\<\/dcterms\:created\>/", $line, $match)) {
+                $date = $match[1];
                 $date = substr($date, 0, 10);
             }
-            if (preg_match("/\<cb:value\>([[:graph:]]+)\<\/cb:value\>/", $line, $m)) {
-                $rate = $m[1];
+            if (preg_match("/\<cb:value\>([[:graph:]]+)\<\/cb:value\>/", $line, $match)) {
+                $rate = $match[1];
             }
-            if (preg_match("/\<cb:targetCurrency\>([[:graph:]]+)\<\/cb:targetCurrency\>/", $line, $m)) {
-                $currencyCode = $m[1];
+            if (preg_match("/\<cb:targetCurrency\>([[:graph:]]+)\<\/cb:targetCurrency\>/", $line, $match)) {
+                $currencyCode = $match[1];
                 $currency[$currencyCode] = (1 / $rate);
                 $count++;
-                if ($count ==  4) {
+                if ($count == 4) {
                     break;
                 }
             }

@@ -19,7 +19,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.8-beta';
+    const VERSION = '0.1.9-beta';
 
     /** @var Database|null */
     protected $database;
