@@ -3,8 +3,8 @@
 Beta Release
 [![Maintainability](https://api.codeclimate.com/v1/badges/c93e67dac8f094b3608f/maintainability)](https://codeclimate.com/github/attogram/currency-exchange-rates/maintainability)
 
+Website with daily currency exchage rates from:
 
-Website with Currency Exchage Rates from:
   - European Central Bank
   - Swiss National Bank
   - Bank of Israel
