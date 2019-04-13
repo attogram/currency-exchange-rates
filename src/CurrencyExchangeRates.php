@@ -17,7 +17,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '1.0.2-pre';
+    const VERSION = '1.0.2';
 
     /** @var string Feeds Namespace */
     const FEEDS_NAMESPACE = "\\Attogram\\Currency\\Feeds\\";
