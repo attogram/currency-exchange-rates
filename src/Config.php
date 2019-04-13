@@ -65,28 +65,43 @@ class Config
             'name'     => 'European Central Bank',
             'home'     => 'http://www.ecb.europa.eu/',
             'api'      => 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml',
-            'info'     => 'Daily rates at 3:00 PM Central European Time (CET)',
+            'freq'     => 'Daily rates at 3:00 PM Central European Time (CET)',
+            'about'    => 'The European Central Bank (ECB) is the central bank of the'
+                . ' European Union countries which have adopted the Euro.'
+                . ' It was founded in 1998.'
+                . ' The 19 countries that use the Euro are: Austria, Belgium, Cyprus, Estonia, Finland,'
+                . ' France, Germany, Greece, Ireland, Italy, Latvia, Lithuania, Luxembourg,'
+                . ' Malta, The Netherlands, Portugal, Slovakia, Slovenia, and Spain.',
         ],
         'BankSwitzerland' => [
             'currency' => 'CHF',
             'name'     => 'Swiss National Bank',
             'home'     => 'http://www.snb.ch/',
             'api'      => 'http://www.snb.ch/selector/en/mmr/exfeed/rss',
-            'info'     => 'Daily rates at 11:00 AM Central European Time (CET)',
+            'freq'     => 'Daily rates at 11:00 AM Central European Time (CET)',
+            'about'    => 'The Swiss National Bank (SNB) is the central bank of Switzerland.'
+                . '  It was founded in 1826.',
         ],
         'BankIsrael' => [
             'currency' => 'ILS',
             'name'     => 'Bank of Israel',
             'home'     => 'http://www.boi.org.il/en/',
             'api'      => 'http://www.boi.org.il/currency.xml',
-            'info'     => 'Daily rates',
+            'freq'     => 'Daily',
+            'about'    => 'The Bank of Israel'
+                . ' ( בנק ישראל) '
+                . ' is the central bank of Israel.  It was founded in 1954.',
         ],
         'BankRussia' => [
             'currency' => 'RUB',
             'name'     => 'Central Bank of the Russian Federation',
             'home'     => 'http://www.cbr.ru/eng/',
             'api'      => 'http://www.cbr.ru/scripts/XML_daily.asp',
-            'info'     => 'Daily rates',
+            'freq'     => 'Daily',
+            'about'    => 'The Central Bank of the Russian Federation'
+                . ' (Центральный банк Российской Федерации)'
+                . ' is the central bank of the Russian Federation.'
+                . ' It was founded in 1990.',
         ],
     ];
 
