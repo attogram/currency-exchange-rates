@@ -17,16 +17,19 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
+
+    /** @var string Feeds Namespace */
+    const FEEDS_NAMESPACE = "\\Attogram\\Currency\\Feeds\\";
+
+    /** @var string Git Repository */
+    const GIT_REPO = 'https://github.com/attogram/currency-exchange-rates';
 
     /** @var Database|null */
     protected $database;
 
     /** @var Router */
     protected $router;
-
-    /** @var string Git Repository */
-    protected $gitRepo = 'https://github.com/attogram/currency-exchange-rates';
 
     public function __construct()
     {
@@ -77,9 +80,13 @@ class CurrencyExchangeRates
     protected function about()
     {
         $this->displayHeader();
+        $count = count(Config::$feeds) - count($this->config['hidden']);
         print 'This site incorporates currency exchange data retrieved from '
-            . count(Config::$feeds) . " sources:\n\n";
+            . " $count sources:\n\n";
         foreach (Config::$feeds as $code => $feed) {
+            if (in_array($code, $this->config['hidden'])) {
+                continue;
+            }
             print ' - <a href="' . $this->router->getHome() . 'about/' . $code . '">'
                 . 'The ' . $feed['name'] . '</a>' . ' (<a href="' . $this->router->getHome() . $feed['currency'] . '/">'
                 . $feed['currency'] . '</a>)' . "\n";
@@ -268,7 +275,7 @@ a:hover { color:black; background-color:yellow; }
         print "\n\n\n";
         $this->displayMenu();
         print "\n\n\n"
-            . '<small>Powered by <a href="' . $this->gitRepo . '">attogram/currency-exchange-rates</a>'
+            . '<small>Powered by <a href="' . self::GIT_REPO . '">attogram/currency-exchange-rates</a>'
             . ' v' . self::VERSION . "</small>\n\n" . '</pre>';
         $this->includeCustom('footer.php');
         print '</body></html>';
@@ -315,7 +322,7 @@ a:hover { color:black; background-color:yellow; }
 
             return;
         }
-        $class = "\\Attogram\\Currency\\Feeds\\" . $feedCode;
+        $class = self::FEEDS_NAMESPACE . $feedCode;
         if (!class_exists($class)) {
             $this->error404('Feed Class Not Found');
 

@@ -23,7 +23,7 @@ if (!Config::isValidFeed($code)) {
     );
 }
 
-$class = "\\Attogram\\Currency\\Feeds\\" . $code;
+$class = CurrencyExchangeRates::FEEDS_NAMESPACE . $code;
 if (!class_exists($class)) {
     die('Class Not Found: ' . $class);
 }

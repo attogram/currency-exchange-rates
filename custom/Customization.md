@@ -1,14 +1,15 @@
 # Customization
 
-This directory is for local customization files.
+This directory is for optional customization files.
 
 * Configuration: create file `config.php`
 
   * See
   [`config.example.php`](https://github.com/attogram/currency-exchange-rates/tree/master/custom/config.example.php)
   for format
-  * Site Title
+  * Custom Site Title
   * Administrator IP Address
+  * Hidden Feeds
 
 * Add custom Header: create file `header.php`
 
