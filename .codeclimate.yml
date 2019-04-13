@@ -41,6 +41,9 @@ plugins:
     enabled: true
     config:
       file_extensions: "php"
+    checks:
+      PhanUndeclaredClassMethod:
+        enabled: false
   phpcodesniffer:
     enabled: true
   phpmd:
@@ -52,5 +55,8 @@ plugins:
     enabled: true
   sonar-php:
     enabled: true
+    checks:
+      php:S112:
+        enabled: false # allow generic throw Exception
   stylelint:
     enabled: true
