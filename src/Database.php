@@ -11,7 +11,7 @@ use function in_array;
 class Database
 {
     /** @var PDO */
-    public $db;
+    public $pdo;
 
     /** @var string */
     public $dbFile = __DIR__ . '/../db/rates.sqlite';
@@ -32,7 +32,7 @@ class Database
         if (!is_writable($this->dbFile)) {
             throw new Exception('Database is not writeable');
         }
-        $this->db = new PDO('sqlite:'. $this->dbFile);
+        $this->pdo = new PDO('sqlite:'. $this->dbFile);
         if ($createTables) {
             $this->createTables();
         }
@@ -46,16 +46,16 @@ class Database
      */
     public function query(string $sql, array $bind = []) :array
     {
-        $statement = $this->db->prepare($sql);
+        $statement = $this->pdo->prepare($sql);
         if (!$statement) {
-            throw new Exception('prepare statement failed: ' . implode(', ', $this->db->errorInfo()));
+            throw new Exception('prepare statement failed: ' . implode(', ', $this->pdo->errorInfo()));
         }
         if (!$statement->execute($bind)) {
-            throw new Exception('execute statement failed: ' . implode(', ', $this->db->errorInfo()));
+            throw new Exception('execute statement failed: ' . implode(', ', $this->pdo->errorInfo()));
         }
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        if (!$result && ($this->db->errorCode() != '00000')) {
-            throw new Exception('statement fetchAll failed: ' . implode(', ', $this->db->errorInfo()));
+        if (!$result && ($this->pdo->errorCode() != '00000')) {
+            throw new Exception('statement fetchAll failed: ' . implode(', ', $this->pdo->errorInfo()));
         }
 
         return $result;
@@ -66,18 +66,18 @@ class Database
      * @param array $bind
      * @throws Exception
      */
-    function insert(string $sql, array $bind = [])
+    public function insert(string $sql, array $bind = [])
     {
-        $statement = $this->db->prepare($sql);
+        $statement = $this->pdo->prepare($sql);
         if (!$statement) {
             throw new Exception(
-                'insert prepare statement failed: ' . print_r($this->db->errorInfo())
+                'insert prepare statement failed: ' . print_r($this->pdo->errorInfo())
             );
         }
         $result = $statement->execute($bind);
-        if (!$result && ($this->db->errorCode() != '00000')) {
+        if (!$result && ($this->pdo->errorCode() != '00000')) {
             throw new Exception(
-                'insert execute statement failed: ' . $this->db->errorCode() . ' - ' . print_r($this->db->errorInfo())
+                'insert execute statement failed: ' . $this->pdo->errorCode() . ' - ' . print_r($this->pdo->errorInfo())
             );
         }
     }
@@ -85,7 +85,8 @@ class Database
     /**
      * @throws Exception
      */
-    function createTables() {
+    public function createTables()
+    {
         $this->query("
             CREATE TABLE IF NOT EXISTS 'rates' (
                 'day' DATETIME NOT NULL,

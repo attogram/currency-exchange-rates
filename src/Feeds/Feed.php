@@ -102,7 +102,8 @@ class Feed implements FeedsInterface
      *
      * @throws Exception
      */
-    public function insert() {
+    public function insert()
+    {
         if (empty($this->data) || !is_array($this->data)) {
             throw new Exception('Data Not Found');
         }

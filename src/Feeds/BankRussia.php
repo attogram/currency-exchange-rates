@@ -8,8 +8,8 @@ use function mb_convert_encoding;
 use function preg_match;
 use function str_replace;
 
-final class BankRussia extends Feed implements FeedsInterface {
-
+final class BankRussia extends Feed implements FeedsInterface
+{
     public function transform()
     {
         $this->raw = mb_convert_encoding(
@@ -26,17 +26,17 @@ final class BankRussia extends Feed implements FeedsInterface {
         $currency = [];
         $date = $target = '';
         foreach ($this->lines as $line) {
-            if (preg_match("/Date=\"([[:graph:]]+)\"/", $line, $match) ) {
+            if (preg_match("/Date=\"([[:graph:]]+)\"/", $line, $match)) {
                 $date = $match[1];
                 $da = explode('.', $date);
                 $date = $da[2] . '-' . $da[1] . '-' . $da[0];
                 continue;
             }
-            if (preg_match("/<CharCode>([[:alpha:]]+)<\/CharCode>/", $line, $match) ) {
+            if (preg_match("/<CharCode>([[:alpha:]]+)<\/CharCode>/", $line, $match)) {
                 $target = $match[1];
                 continue;
             }
-            if (preg_match("/<Value>([[:graph:]]+)<\/Value>/", $line, $match) ) {
+            if (preg_match("/<Value>([[:graph:]]+)<\/Value>/", $line, $match)) {
                 $rate = $match[1];
                 $rate = str_replace(',', '.', $rate);
                 $rate = (1 / $rate);

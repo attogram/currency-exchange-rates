@@ -6,8 +6,8 @@ namespace Attogram\Currency\Feeds;
 use function preg_match;
 use function substr;
 
-class BankSwitzerland extends Feed implements FeedsInterface {
-
+class BankSwitzerland extends Feed implements FeedsInterface
+{
     public function process()
     {
         parent::process();
@@ -15,11 +15,11 @@ class BankSwitzerland extends Feed implements FeedsInterface {
         $date = $rate = '';
         $count = 0;
         foreach ($this->lines as $line) {
-            if(preg_match("/\<dcterms\:created\>([[:graph:]]+)\<\/dcterms\:created\>/", $line,$m)) {
+            if (preg_match("/\<dcterms\:created\>([[:graph:]]+)\<\/dcterms\:created\>/", $line, $m)) {
                 $date = $m[1];
                 $date = substr($date, 0, 10);
             }
-            if (preg_match("/\<cb:value\>([[:graph:]]+)\<\/cb:value\>/",$line,$m)) {
+            if (preg_match("/\<cb:value\>([[:graph:]]+)\<\/cb:value\>/", $line, $m)) {
                 $rate = $m[1];
             }
             if (preg_match("/\<cb:targetCurrency\>([[:graph:]]+)\<\/cb:targetCurrency\>/", $line, $m)) {

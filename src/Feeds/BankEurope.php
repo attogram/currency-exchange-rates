@@ -5,8 +5,8 @@ namespace Attogram\Currency\Feeds;
 
 use function preg_match;
 
-final class BankEurope extends Feed implements FeedsInterface {
-
+final class BankEurope extends Feed implements FeedsInterface
+{
     public function process()
     {
         parent::process();
