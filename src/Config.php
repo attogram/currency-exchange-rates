@@ -7,7 +7,7 @@ use function array_key_exists;
 
 class Config
 {
-    /** @var array */
+    /** @var array ISO 4217 => name */
     public static $currencies = [
         'AUD' => ['name' => 'Australian Dollar'],
         'AMD' => ['name' => 'Armenian Dram'],
@@ -62,6 +62,12 @@ class Config
     public static $feeds = [
         'BankEurope' => [
             'currency' => 'EUR',
+            'targets'  => [
+                'AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK',
+                'GBP', 'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'ISK',
+                'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN',
+                'RON', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'USD', 'ZAR',
+            ],
             'name'     => 'European Central Bank',
             'home'     => 'https://www.ecb.europa.eu/',
             'api'      => 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml',
@@ -74,6 +80,7 @@ class Config
         ],
         'BankSwitzerland' => [
             'currency' => 'CHF',
+            'targets'  => ['EUR', 'GBP', 'JPY', 'USD'],
             'name'     => 'Swiss National Bank',
             'home'     => 'https://www.snb.ch/',
             'api'      => 'https://www.snb.ch/selector/en/mmr/exfeed/rss',
@@ -83,6 +90,10 @@ class Config
         ],
         'BankIsrael' => [
             'currency' => 'ILS',
+            'targets'  => [
+                'AUD', 'CAD', 'CHF', 'DKK', 'EGP', 'EUR', 'GBP', 'JOD',
+                'JPY', 'LBP', 'NOK', 'SEK', 'USD', 'ZAR',
+            ],
             'name'     => 'Bank of Israel',
             'home'     => 'https://www.boi.org.il/en/',
             'api'      => 'https://www.boi.org.il/currency.xml',
@@ -92,12 +103,20 @@ class Config
         ],
         'BankRussia' => [
             'currency' => 'RUB',
+            'targets'  => [
+                'AMD', 'AUD', 'AZN', 'BGN', 'BRL', 'BYN', 'BYR', 'CAD',
+                'CHF', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF',
+                'INR', 'JPY', 'KGS', 'KRW', 'KZT', 'MDL', 'NOK', 'PLN',
+                'RON', 'SEK', 'SGD', 'TJS', 'TMT', 'TRY', 'UAH', 'USD',
+                'UZS', 'XDR', 'ZAR',
+            ],
             'name'     => 'Central Bank of the Russian Federation',
             'home'     => 'https://www.cbr.ru/eng/',
             'api'      => 'https://www.cbr.ru/scripts/XML_daily.asp',
             'freq'     => 'Daily',
             'about'    => 'The Central Bank of the Russian Federation'
-                . ' (Центральный банк Российской Федерации) is the central bank of Russia.'
+                . ' (Центральный банк Российской Федерации)'
+                . ' is the central bank of Russia.'
                 . ' The bank was founded in 1990.',
         ],
     ];
