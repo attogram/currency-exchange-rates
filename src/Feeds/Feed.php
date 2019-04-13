@@ -32,15 +32,36 @@ class Feed implements FeedsInterface
     public function __construct(string $api)
     {
         $this->api = $api;
-        print "\nGetting feed: " . $this->api;
-        $this->get();
-        print "\nProcessing " . strlen($this->raw) . " characters";
-        $this->process();
-        print "\nProcessing " . count($this->lines) . " lines";
-        print "\nInserting " . count($this->data) . " entries";
-        $this->insert();
-        print "\nDONE.";
 
+        print "\n\nGetting feed: " . $this->api;
+
+        $this->get();
+
+        print "\n\nGot " . strlen($this->raw) . " characters\n";
+        print '<textarea rows="5" cols="100">' . $this->raw . '</textarea>';
+
+        $this->transform();
+
+        print "\n\nTransformed to " . strlen($this->raw) . " characters\n";
+        print '<textarea rows="5" cols="100">' . $this->raw . '</textarea>';
+
+        $this->process();
+
+        print "\n\nProcessed " . count($this->lines) . " lines\n";
+        print '<textarea rows="5" cols="100">' . print_r($this->lines, true) . '</textarea>';
+
+        $this->insert();
+
+        print "\n\nInserted " . count($this->data) . " entries\n";
+        print '<textarea rows="10" cols="100">' . print_r($this->data, true) . '</textarea>';
+    }
+
+    /**
+     * If needed, transform $this->raw
+     */
+    public function transform()
+    {
+        return;
     }
 
     /**

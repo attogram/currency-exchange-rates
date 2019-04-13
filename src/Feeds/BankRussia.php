@@ -9,6 +9,15 @@ use function str_replace;
 
 final class BankRussia extends Feed implements FeedsInterface {
 
+    public function transform()
+    {
+        $this->raw = mb_convert_encoding(
+            $this->raw,
+            'UTF-8',
+            'Windows-1251'
+        );
+    }
+
     public function process()
     {
         parent::process();
