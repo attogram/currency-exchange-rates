@@ -21,7 +21,7 @@ Live Demo: **<https://getitdaily.com/rates/>**
 
 ### Install with Composer
 
-* `composer create-project attogram/currency-exchange-rates your-install-directory `
+* `composer create-project attogram/currency-exchange-rates your-install-directory`
 
 ### Install with Git
 
