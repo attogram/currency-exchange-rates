@@ -8,6 +8,7 @@
 * refactor feed processing to XPATH
 * refactor layout to CSS GRID
 * add guzzle status to verbosity > 1 in admin Feeds
+* lower timeout, handle Uncaught GuzzleHttp\Exception\RequestException in admin Feeds
 
 ## new feeds
 
