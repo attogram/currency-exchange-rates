@@ -56,7 +56,8 @@ class Feed implements FeedsInterface
     /**
      * @param string $text
      */
-    public function verbose(string $text) {
+    public function verbose(string $text)
+    {
         if ($this->verbosity > 0) {
             print $text;
         }
