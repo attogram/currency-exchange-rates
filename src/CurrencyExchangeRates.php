@@ -7,15 +7,20 @@ use Attogram\Router\Router;
 use Exception;
 use Throwable;
 
+use function array_merge;
+use function class_exists;
+use function count;
 use function header;
 use function method_exists;
+use function round;
+use function sprintf;
 
 class CurrencyExchangeRates
 {
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.3-beta';
+    const VERSION = '0.1.4-beta';
 
     /** @var Router */
     protected $router;
@@ -190,7 +195,7 @@ class CurrencyExchangeRates
             return '';
         }
         $display = "-------  ----------\t-------  ----------\t----------    "
-            . "<small>----------------------------------------------------</small>\n";
+            . "<small>------------------------------------------------------</small>\n";
         foreach ($rates as $rate) {
             $display .= $this->displayRate($rate);
         }
@@ -215,7 +220,7 @@ class CurrencyExchangeRates
             . $reverseRate
             . "\t"
             . $rate['day']
-            . '    <small>updated ' . $rate['last_updated'] . ' UTC from ' . $rate['feed'] . '</small>'
+            . '    <small>retrieved ' . $rate['last_updated'] . ' UTC from ' . $rate['feed'] . '</small>'
             . "\n";
     }
 
@@ -265,8 +270,7 @@ a:hover { color:black; background-color:yellow; }
      */
     protected function isAdmin()
     {
-        if (is_string($this->config['adminIP'])
-            && $this->config['adminIP']
+        if (!empty($this->config['adminIP'])
             && $this->config['adminIP'] === $this->router->getServer('REMOTE_ADDR')
         ) {
             return true;

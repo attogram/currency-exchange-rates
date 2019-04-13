@@ -10,8 +10,11 @@ class Config
     /** @var array */
     public static $currencies = [
         'AUD' => ['name' => 'Australian Dollar'],
+        'AMD' => ['name' => 'Armenian Dram'],
+        'AZN' => ['name' => 'Azerbaijani Manat'],
         'BGN' => ['name' => 'Bulgarian Lev'],
         'BRL' => ['name' => 'Brazilian Real'],
+        'BYN' => ['name' => 'Belarusian Ruble'],
         'CAD' => ['name' => 'Canadian Dollar'],
         'CHF' => ['name' => 'Swiss Franc'],
         'CNY' => ['name' => 'Chinese Yuan'],
@@ -29,8 +32,11 @@ class Config
         'ISK' => ['name' => 'Icelandic Króna'],
         'JOD' => ['name' => 'Jordanian Dinar'],
         'JPY' => ['name' => 'Japanese Yen'],
+        'KGS' => ['name' => 'Kyrgystani Som'],
         'KRW' => ['name' => 'South Korean Won'],
+        'KZT' => ['name' => 'Kazakhstani Tenge'],
         'LBP' => ['name' => 'Lebanese Pound'],
+        'MDL' => ['name' => 'Moldovan Leu'],
         'MXN' => ['name' => 'Mexican Peso'],
         'MYR' => ['name' => 'Malaysian Ringgit'],
         'NOK' => ['name' => 'Norwegian Krone'],
@@ -42,8 +48,13 @@ class Config
         'SEK' => ['name' => 'Swedish Krona'],
         'SGD' => ['name' => 'Singapore Dollar'],
         'THB' => ['name' => 'Thai Baht'],
+        'TJS' => ['name' => 'Tajikistani Somoni'],
+        'TMT' => ['name' => 'Turkmenistan Manat'],
         'TRY' => ['name' => 'Turkish Lira'],
+        'UAH' => ['name' => 'Ukrainian Hryvnia'],
         'USD' => ['name' => 'United States Dollar'],
+        'UZS' => ['name' => 'Uzbekistani Som'],
+        'XDR' => ['name' => 'Special Drawing Rights'],
         'ZAR' => ['name' => 'South African Rand'],
     ];
 
