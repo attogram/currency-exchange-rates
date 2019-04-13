@@ -17,7 +17,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.12-beta';
+    const VERSION = '0.1.13-beta';
 
     /** @var Database|null */
     protected $database;
@@ -40,7 +40,7 @@ class CurrencyExchangeRates
         $this->router->setForceSlash(true);
         $this->router->allow('/', 'home');
         $this->router->allow('/about/', 'about');
-        $this->router->allow('/feed/?/', 'feedInfo');
+        $this->router->allow('/about/?/', 'feedInfo');
         $this->router->allow('/?/', 'currency');
         $this->router->allow('/?/?/', 'currencyPair');
         if ($this->isAdmin()) {
@@ -77,17 +77,26 @@ class CurrencyExchangeRates
     protected function about()
     {
         $this->displayHeader();
-        print "This site incorporates currency exchange data from:\n\n";
+        print 'This site incorporates currency exchange data retrieved from '
+            . count(Config::$feeds) . " sources:\n\n";
         foreach (Config::$feeds as $code => $feed) {
-            print ' - <a href="' . $this->router->getHome() . 'feed/' . $code . '">'
+            print ' - <a href="' . $this->router->getHome() . 'about/' . $code . '">'
                 . 'The ' . $feed['name'] . '</a>'
                 . ' (<a href="' . $this->router->getHome() . $feed['currency'] . '/">'
                 . $feed['currency'] . '</a>)'
-                . "\n\n";
+                . "\n";
+        }
+        print "\nwith " . count(Config::$currencies) . " available currencies:\n\n";
+        foreach (Config::$currencies as $code => $currency) {
+            print ' - <a href="' . $this->router->getHome() . $code . '/">'
+                . $code . '</a> (' . $currency['name'] . ")\n";
         }
         $this->displayFooter();
     }
 
+    /**
+     * @throws Exception
+     */
     protected function feedInfo()
     {
         $feedCode = $this->router->getVar(0);
@@ -96,7 +105,28 @@ class CurrencyExchangeRates
 
             return;
         }
-
+        $this->database = new Database();
+        $pairsQ = $this->database->query(
+            'SELECT DISTINCT source, target 
+                 FROM rates 
+                 WHERE source = :s
+                 ORDER BY target',
+            ['s' => Config::$feeds[$feedCode]['currency']]
+        );
+        $pairsA = [];
+        foreach ($pairsQ as $pair) {
+            $pairsA[] .= implode('/', $pair);
+        }
+        $pairDisplay = '';
+        $break = 0;
+        foreach ($pairsA as $pair) {
+            $pairDisplay .= '<a href="' . $this->router->getHome() . $pair . '"/>'
+                . $pair . '</a>, ';
+            if (++$break > 7) {
+                $pairDisplay .= "\n";
+                $break = 0;
+            }
+        }
         $this->displayHeader();
         print 'About The ' . Config::$feeds[$feedCode]['name'] . "\n"
             . '</pre>'
@@ -104,6 +134,7 @@ class CurrencyExchangeRates
             . '<pre>'
             . 'Currency: <b><a href="' . $this->router->getHome() . Config::$feeds[$feedCode]['currency']
             . '/">' . Config::$feeds[$feedCode]['currency'] . "</a></b>\n\n"
+            . count($pairsA) . " Currency Pairs:\n" . $pairDisplay . "\n\n"
             . 'Website: <a href="' . Config::$feeds[$feedCode]['home'] . '">'
             . Config::$feeds[$feedCode]['home'] . "</a>\n\n"
             . 'API Endpoint:  <a href="' . Config::$feeds[$feedCode]['api'] . '">'
@@ -129,7 +160,8 @@ class CurrencyExchangeRates
             'SELECT * FROM rates WHERE source = :s OR target = :t ORDER BY last_updated DESC LIMIT 100',
             ['s' => $currency, 't' => $currency]
         );
-        print "$currency Rates:\n\n"
+        print $currency . ' (' . Config::getFeedCurrencyName($currency)
+            . ") Exchange Rates:\n\n"
             . Format::formatRates($rates, $this->router->getHome());
         $this->displayFooter();
     }

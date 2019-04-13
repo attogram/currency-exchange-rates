@@ -139,13 +139,24 @@ class Config
     }
 
     /**
-     * @param string $feedCode
+     * @param string $code
      * @return string
      */
-    public static function getFeedName(string $feedCode) :string
+    public static function getFeedName(string $code) :string
     {
-        return empty(static::$feeds[$feedCode]['name'])
+        return empty(static::$feeds[$code]['name'])
             ? ''
-            : static::$feeds[$feedCode]['name'];
+            : static::$feeds[$code]['name'];
+    }
+
+    /**
+     * @param string $code
+     * @return string
+     */
+    public static function getFeedCurrencyName(string $code) :string
+    {
+        return empty(static::$currencies[$code]['name'])
+            ? ''
+            : static::$currencies[$code]['name'];
     }
 }

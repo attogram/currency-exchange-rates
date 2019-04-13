@@ -18,13 +18,14 @@ class Format
         if (empty($rates)) {
             return '';
         }
-        $display = "-------  ----------\t-------  ----------\t----------    "
+        $header = "-------  ----------\t-------  ----------\t----------    "
             . "<small>------------------------------------------------------</small>\n";
+        $display = $header;
         foreach ($rates as $rate) {
             $display .= static::formatRate($rate, $home);
         }
 
-        return $display;
+        return $display . $header;
     }
 
     /**
@@ -42,6 +43,8 @@ class Format
             . '<a href="' . $home . $rate['target'] . '/">' . $rate['target'] . '</a>/'
             . '<a href="' . $home . $rate['source'] . '/">' . $rate['source'] . '</a>  '
             . $reverseRate . "\t" . $rate['day'] . '    <small>retrieved '
-            . $rate['last_updated'] . ' UTC from ' . $rate['feed'] . '</small>' . "\n";
+            . $rate['last_updated'] . ' UTC from '
+            . '<a href="' . $home . 'about/' . $rate['feed'] . '/">' . $rate['feed'] . '</a>'
+            . '</small>' . "\n";
     }
 }
