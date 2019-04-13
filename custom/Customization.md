@@ -5,7 +5,8 @@ This directory is for local customization files.
 * Configuration: create file `config.php`
 
   * See
-  [`config.example.php`](https://github.com/attogram/currency-exchange-rates/tree/master/custom/config.example.php) for format
+  [`config.example.php`](https://github.com/attogram/currency-exchange-rates/tree/master/custom/config.example.php)
+  for format
   * Site Title
   * Administrator IP Address
 

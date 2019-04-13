@@ -6,7 +6,9 @@ namespace Attogram\Currency;
 use Exception;
 use PDO;
 
+use function file_exists;
 use function in_array;
+use function print_r;
 
 class Database
 {
@@ -48,14 +50,17 @@ class Database
     {
         $statement = $this->pdo->prepare($sql);
         if (!$statement) {
-            throw new Exception('prepare statement failed: ' . implode(', ', $this->pdo->errorInfo()));
+            throw new Exception('prepare statement failed: '
+                . print_r($this->pdo->errorInfo(), true));
         }
         if (!$statement->execute($bind)) {
-            throw new Exception('execute statement failed: ' . implode(', ', $this->pdo->errorInfo()));
+            throw new Exception('execute statement failed: '
+                . print_r($this->pdo->errorInfo(), true));
         }
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         if (!$result && ($this->pdo->errorCode() != '00000')) {
-            throw new Exception('statement fetchAll failed: ' . implode(', ', $this->pdo->errorInfo()));
+            throw new Exception('statement fetchAll failed: '
+                . print_r($this->pdo->errorInfo(), true));
         }
 
         return $result;
@@ -71,13 +76,15 @@ class Database
         $statement = $this->pdo->prepare($sql);
         if (!$statement) {
             throw new Exception(
-                'insert prepare statement failed: ' . print_r($this->pdo->errorInfo())
+                'insert prepare statement failed: '
+                . print_r($this->pdo->errorInfo(), true)
             );
         }
         $result = $statement->execute($bind);
         if (!$result && ($this->pdo->errorCode() != '00000')) {
             throw new Exception(
-                'insert execute statement failed: ' . $this->pdo->errorCode() . ' - ' . print_r($this->pdo->errorInfo())
+                'insert execute statement failed: '
+                . $this->pdo->errorCode() . ' - ' . print_r($this->pdo->errorInfo(), true)
             );
         }
     }

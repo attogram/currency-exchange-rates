@@ -46,6 +46,8 @@ plugins:
         enabled: false
       PhanUndeclaredTypeProperty:
         enabled: false
+      PhanUndeclaredTypeThrowsType:
+        enabled: false
   phpcodesniffer:
     enabled: true
   phpmd:

@@ -20,7 +20,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.5-beta';
+    const VERSION = '0.1.6-beta';
 
     /** @var Router */
     protected $router;
