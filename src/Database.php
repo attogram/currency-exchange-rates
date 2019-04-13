@@ -106,4 +106,16 @@ class Database
             )
         ");
     }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getCurrencyCodes()
+    {
+        $sources = $this->query('SELECT DISTINCT source AS currency FROM rates ORDER BY source');
+        $targets = $this->query('SELECT DISTINCT target AS currency FROM rates ORDER BY target');
+
+        return array_merge($sources, $targets);
+    }
 }

@@ -7,7 +7,6 @@ use Attogram\Router\Router;
 use Exception;
 use Throwable;
 
-use function array_merge;
 use function class_exists;
 use function count;
 use function header;
@@ -20,7 +19,10 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.6-beta';
+    const VERSION = '0.1.7-beta';
+
+    /** @var Database|null */
+    protected $database;
 
     /** @var Router */
     protected $router;
@@ -63,11 +65,21 @@ class CurrencyExchangeRates
     protected function home()
     {
         $this->displayHeader();
-        $database = new Database();
+        $this->database = new Database();
+        $this->displayCurrencyCodes();
+        $pairCount = $this->displayCurrencyPairs();
+        print "\n\nExchange rates as of " . gmdate('Y-m-d H:i:s') . " UTC\n\n";
+        $rates = $this->database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT ' . $pairCount);
+        print $this->displayRates($rates);
+        $this->displayFooter();
+    }
 
-        $sources = $database->query('SELECT DISTINCT source AS currency FROM rates ORDER BY source');
-        $targets = $database->query('SELECT DISTINCT target AS currency FROM rates ORDER BY target');
-        $currencies = array_merge($sources, $targets);
+    /**
+     * @throws Exception
+     */
+    protected function displayCurrencyCodes()
+    {
+        $currencies = $this->database->getCurrencyCodes();
         print count($currencies) . " Currencies\n\n";
         $break = 0;
         foreach ($currencies as $currency) {
@@ -78,7 +90,15 @@ class CurrencyExchangeRates
                 $break = 0;
             }
         }
-        $pairs = $database->query('SELECT DISTINCT source, target FROM rates');
+    }
+
+    /**
+     * @return int
+     * @throws Exception
+     */
+    protected function displayCurrencyPairs()
+    {
+        $pairs = $this->database->query('SELECT DISTINCT source, target FROM rates');
         print "\n\n" . count($pairs) . " Currency Pairs\n\n";
         $break = 0;
         foreach ($pairs as $pair) {
@@ -89,10 +109,8 @@ class CurrencyExchangeRates
                 $break = 0;
             }
         }
-        print "\n\nExchange rates as of " . gmdate('Y-m-d H:i:s') . " UTC\n\n";
-        $rates = $database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT ' . count($pairs));
-        print $this->displayRates($rates);
-        $this->displayFooter();
+
+        return count($pairs);
     }
 
     protected function admin()
