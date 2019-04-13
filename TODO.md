@@ -9,18 +9,19 @@
 * refactor layout to CSS GRID
 * add guzzle status to verbosity > 1 in admin Feeds
 * lower timeout, handle Uncaught GuzzleHttp\Exception\RequestException in admin Feeds
+* /about/ currency list from DB, use config only for name
 
 ## new feeds
 
 * US Federal Reserve
-  * RSS <http://www.federalreserve.gov/feeds/h10_data.htm>
+  * <http://www.federalreserve.gov/feeds/h10_data.htm>
 * Bank Of Canada
-  * XML Noon <http://www.bankofcanada.ca/stats/assets/rates_rss/noon/en_all.xml>
-  * XML Closing <http://www.bankofcanada.ca/stats/assets/rates_rss/closing/en_all.xml>
+  * <http://www.bankofcanada.ca/stats/assets/rates_rss/noon/en_all.xml>
+  * <http://www.bankofcanada.ca/stats/assets/rates_rss/closing/en_all.xml>
 * Reserve Bank of Australia
-  * RSS <http://www.rba.gov.au/rss/rss-cb-exchange-rates.xml>
-* Bank of Thailand
-  * RSS <http://www2.bot.or.th/RSS/fxrates/fxrate-all.xml>
+  * <http://www.rba.gov.au/rss/rss-cb-exchange-rates.xml>
+* Bank of Thailand 
+  * <http://www2.bot.or.th/RSS/fxrates/fxrate-all.xml>
 
 ## misc
 

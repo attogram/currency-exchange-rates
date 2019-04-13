@@ -66,12 +66,12 @@ class Config
             'home'     => 'https://www.ecb.europa.eu/',
             'api'      => 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml',
             'freq'     => 'Daily rates at 3:00 PM Central European Time (CET)',
-            'about'    => 'The European Central Bank (ECB) is the central bank of the'
-                . ' European Union countries which have adopted the Euro.'
-                . ' It was founded in 1998.'
-                . ' The 19 countries that use the Euro are: Austria, Belgium, Cyprus, Estonia, Finland,'
+            'about'    => 'The European Central Bank (ECB) is the central bank for '
+                . ' 19 European Union countries: Austria, Belgium, Cyprus, Estonia, Finland,'
                 . ' France, Germany, Greece, Ireland, Italy, Latvia, Lithuania, Luxembourg,'
-                . ' Malta, The Netherlands, Portugal, Slovakia, Slovenia, and Spain.',
+                . ' Malta, The Netherlands, Portugal, Slovakia, Slovenia, and Spain.'
+                . ' The ECB was founded in 1998.'
+,
         ],
         'BankSwitzerland' => [
             'currency' => 'CHF',
@@ -80,7 +80,7 @@ class Config
             'api'      => 'https://www.snb.ch/selector/en/mmr/exfeed/rss',
             'freq'     => 'Daily rates at 11:00 AM Central European Time (CET)',
             'about'    => 'The Swiss National Bank (SNB) is the central bank of Switzerland.'
-                . '  It was founded in 1826.',
+                . ' The SNB was founded in 1826.',
         ],
         'BankIsrael' => [
             'currency' => 'ILS',
@@ -88,9 +88,8 @@ class Config
             'home'     => 'https://www.boi.org.il/en/',
             'api'      => 'https://www.boi.org.il/currency.xml',
             'freq'     => 'Daily',
-            'about'    => 'The Bank of Israel'
-                . ' ( בנק ישראל) '
-                . ' is the central bank of Israel.  It was founded in 1954.',
+            'about'    => 'The Bank of Israel ( בנק ישראל) is the central bank of Israel.'
+                . ' The bank was founded in 1954.',
         ],
         'BankRussia' => [
             'currency' => 'RUB',
@@ -99,9 +98,8 @@ class Config
             'api'      => 'https://www.cbr.ru/scripts/XML_daily.asp',
             'freq'     => 'Daily',
             'about'    => 'The Central Bank of the Russian Federation'
-                . ' (Центральный банк Российской Федерации)'
-                . ' is the central bank of the Russian Federation.'
-                . ' It was founded in 1990.',
+                . ' (Центральный банк Российской Федерации) is the central bank of Russia.'
+                . ' The bank was founded in 1990.',
         ],
     ];
 
