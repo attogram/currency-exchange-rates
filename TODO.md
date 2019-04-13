@@ -7,6 +7,8 @@
 * codeclimate checks
 * travis-ci build
 * full documentation
+* refactor feed processing to XPATH
+* refactor layout to CSS GRID
 
 ## new feeds
 
