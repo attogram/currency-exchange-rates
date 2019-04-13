@@ -33,4 +33,6 @@ if (empty($api)) {
     die($code . ' API Endpoint Not Found');
 }
 
-new $class($api, true);
+$verbosity = 0;
+
+new $class($api, $verbosity);

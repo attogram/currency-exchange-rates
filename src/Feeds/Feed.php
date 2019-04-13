@@ -24,31 +24,43 @@ class Feed implements FeedsInterface
     /** @var array */
     protected $data = [];
 
+    /** @var int */
+    protected $verbosity = 0;
+
     /**
      * Feed constructor.
      * @param string $api
-     * @param bool $silent
+     * @param int $verbosity
      * @throws Exception
      * @throws GuzzleException
      */
-    public function __construct(string $api, bool $silent = false)
+    public function __construct(string $api, int $verbosity = 1)
     {
         $this->api = $api;
-        print ($silent ? '' : "\n\nGetting feed: " . $this->api);
+        $this->verbosity = $verbosity;
+        $this->verbose("\n\nGetting feed: " . $this->api);
         $this->get();
-        print ($silent ? '' : "\n\nGot " . strlen($this->raw) . " characters\n")
-            . ($silent ? '' : '<textarea rows="5" cols="100">' . $this->raw . '</textarea>');
+        $this->verbose("\n\nGot " . strlen($this->raw) . " characters\n");
+        $this->verbose('<textarea rows="5" cols="100">' . $this->raw . '</textarea>');
         $this->transform();
-        print ($silent ? '' : "\n\nTransformed to " . strlen($this->raw) . " characters\n")
-            . ($silent ? '' : '<textarea rows="5" cols="100">' . $this->raw . '</textarea>');
+        $this->verbose("\n\nTransformed to " . strlen($this->raw) . " characters\n");
+        $this->verbose('<textarea rows="5" cols="100">' . $this->raw . '</textarea>');
         $this->process();
-        print ($silent ? '' : "\n\nProcessed " . count($this->lines) . " lines\n")
-            . ($silent ? '' : '<textarea rows="5" cols="100">' . print_r($this->lines, true) . '</textarea>');
+        $this->verbose("\n\nProcessed " . count($this->lines) . " lines\n");
+        $this->verbose('<textarea rows="5" cols="100">' . print_r($this->lines, true) . '</textarea>');
         $this->insert();
-        print ($silent ? '' : "\n\nInserted " . count($this->data) . " entries\n")
-            . ($silent ? '' : '<textarea rows="10" cols="100">' . print_r($this->data, true) . '</textarea>');
+        $this->verbose("\n\nInserted " . count($this->data) . " entries\n");
+        $this->verbose('<textarea rows="10" cols="100">' . print_r($this->data, true) . '</textarea>');
     }
 
+    /**
+     * @param string $text
+     */
+    public function verbose(string $text) {
+        if ($this->verbosity > 0) {
+            print $text;
+        }
+    }
     /**
      * Get the feed into $this->raw
      *
