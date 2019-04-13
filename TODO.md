@@ -7,6 +7,7 @@
 * full documentation
 * refactor feed processing to XPATH
 * refactor layout to CSS GRID
+* add guzzle status to verbosity > 1 in admin Feeds
 
 ## new feeds
 

@@ -81,7 +81,7 @@ class CurrencyExchangeRates
     {
         $this->displayHeader();
         $count = count(Config::$feeds) - count($this->config['hidden']);
-        print 'This site incorporates currency exchange data retrieved from '
+        print 'This site incorporates currency exchange data retrieved from'
             . " $count sources:\n\n";
         foreach (Config::$feeds as $code => $feed) {
             if (in_array($code, $this->config['hidden'])) {
@@ -258,7 +258,7 @@ class CurrencyExchangeRates
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>' . $this->config['title'] . '</title>
 <style>
-body { margin:25px 50px 50px 50px; }
+body { margin:25px 25px 25px 25px; }
 a, a:visited { color:darkblue; text-decoration:none; }
 a:hover { color:black; background-color:yellow; }
 </style>
