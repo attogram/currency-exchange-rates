@@ -19,7 +19,7 @@ if (!Config::isValidFeed($code)) {
         "\nAttogram Currency Exchange Rates Updater v" . CurrencyExchangeRates::VERSION . "\n\n"
         . "Usage: php " . $argv[0] . " FeedCode\n\n"
         . "Available Feed Codes:\n  - "
-        . implode("\n  - ", array_keys(Config::$feeds)) . "\n"
+        . implode("\n  - ", array_keys(Config::$feeds)) . "\n\n"
     );
 }
 

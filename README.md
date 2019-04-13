@@ -42,6 +42,7 @@ Live Demo: **<https://getitdaily.com/rates/>**
 
 * create custom config: `cp custom/config.example.php custom/config.php`
   * modify: Site Title and Administrator IP
+* make directory writeable: `db/`
 * point web server to `public/` directory
 
 ## Admin
@@ -58,5 +59,5 @@ Live Demo: **<https://getitdaily.com/rates/>**
 
 ## Open Source
 
-_Currency Exchange Rates_ is an Open Source project
+_Attogram Currency Exchange Rates_ is an Open Source project
 brought to you by the [Attogram Project](https://github.com/attogram).
