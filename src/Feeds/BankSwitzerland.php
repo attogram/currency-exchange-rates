@@ -31,14 +31,6 @@ class BankSwitzerland extends Feed implements FeedsInterface
                 }
             }
         }
-        foreach ($currency as $target => $rate) {
-            $this->data[] = [
-                'd' => $date,
-                'r' => $rate,
-                's' => 'CHF',
-                't' => $target,
-                'f' => 'BankSwitzerland',
-            ];
-        }
+        $this->addData($currency, $date, 'CHF', 'BankSwitzerland');
     }
 }

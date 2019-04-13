@@ -57,14 +57,6 @@ class Feed implements FeedsInterface
     }
 
     /**
-     * If needed, transform $this->raw
-     */
-    public function transform()
-    {
-        return;
-    }
-
-    /**
      * Get the feed into $this->raw
      *
      * @throws Exception
@@ -81,6 +73,14 @@ class Feed implements FeedsInterface
             throw new Exception('StatusCode ' . $result->getStatusCode());
         }
         $this->raw = (string) $result->getBody();
+    }
+
+    /**
+     * If needed, transform $this->raw
+     */
+    public function transform()
+    {
+        return;
     }
 
     /**
@@ -113,6 +113,29 @@ class Feed implements FeedsInterface
                 'REPLACE INTO rates (day, rate, source, target, feed) VALUES (:d, :r, :s, :t, :f)',
                 $bind
             );
+        }
+    }
+
+    /**
+     * @param array $exchangeData
+     * @param string $date
+     * @param string $source
+     * @param string $feed
+     */
+    public function addData(
+        array $exchangeData,
+        string $date,
+        string $source,
+        string $feed
+    ) {
+        foreach ($exchangeData as $target => $rate) {
+            $this->data[] = [
+                'd' => $date,
+                'r' => $rate,
+                's' => $source,
+                't' => $target,
+                'f' => $feed,
+            ];
         }
     }
 }

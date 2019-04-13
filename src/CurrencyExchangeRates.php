@@ -19,7 +19,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '0.1.7-beta';
+    const VERSION = '0.1.8-beta';
 
     /** @var Database|null */
     protected $database;
@@ -98,7 +98,7 @@ class CurrencyExchangeRates
      */
     protected function displayCurrencyPairs()
     {
-        $pairs = $this->database->query('SELECT DISTINCT source, target FROM rates');
+        $pairs = $this->database->getCurrencyPairs();
         print "\n\n" . count($pairs) . " Currency Pairs\n\n";
         $break = 0;
         foreach ($pairs as $pair) {

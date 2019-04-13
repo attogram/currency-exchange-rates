@@ -6,6 +6,8 @@ namespace Attogram\Currency;
 use Exception;
 use PDO;
 
+use function array_merge;
+use function array_unique;
 use function file_exists;
 use function in_array;
 use function print_r;
@@ -113,9 +115,24 @@ class Database
      */
     public function getCurrencyCodes()
     {
-        $sources = $this->query('SELECT DISTINCT source AS currency FROM rates ORDER BY source');
-        $targets = $this->query('SELECT DISTINCT target AS currency FROM rates ORDER BY target');
+        $codes = array_merge(
+            $this->query('SELECT DISTINCT source AS currency FROM rates ORDER BY source'),
+            $this->query('SELECT DISTINCT target AS currency FROM rates ORDER BY target')
+        );
+        $codes = array_unique($codes, SORT_REGULAR);
+        sort($codes);
 
-        return array_merge($sources, $targets);
+        return $codes;
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getCurrencyPairs()
+    {
+        return $this->query(
+            'SELECT DISTINCT source, target FROM rates ORDER BY source, target'
+        );
     }
 }
