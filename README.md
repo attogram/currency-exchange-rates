@@ -43,6 +43,18 @@ Live Demo: **<https://getitdaily.com/rates/>**
   * modify: Site Title and Administrator IP
 * point web server to `public/` directory
 
+## Admin
+
+### Update via web
+
+* The `/admin/` page has a list of feeds.
+  click a feed to update data.
+
+### Upate via command line
+
+* CLI script `cli/update.php`
+* usage:  `php update.php FeedCode`
+
 ## Open Source
 
 _Currency Exchange Rates_ is an Open Source project
