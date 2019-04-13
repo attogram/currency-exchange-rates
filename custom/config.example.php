@@ -5,7 +5,7 @@ global $config;
 $config = [
 
     // Site Title
-    'title' => 'My Exchange Rate Website',
+    'title' => 'Attogram Currency Exchange Rates',
 
     // IP address of administrator machine
     'adminIP' => '127.0.0.1',

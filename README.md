@@ -1,9 +1,9 @@
-# Currency Exchange Rates
+# Attogram Currency Exchange Rates
 
 Beta Release
 [![Maintainability](https://api.codeclimate.com/v1/badges/c93e67dac8f094b3608f/maintainability)](https://codeclimate.com/github/attogram/currency-exchange-rates/maintainability)
 
-Currency Exchange Rates Website with data from: 
+Attogram Currency Exchange Rates Website with data from: 
 
 * The European Central Bank
 * The Swiss National Bank
