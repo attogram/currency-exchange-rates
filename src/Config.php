@@ -63,8 +63,8 @@ class Config
         'BankEurope' => [
             'currency' => 'EUR',
             'name'     => 'European Central Bank',
-            'home'     => 'http://www.ecb.europa.eu/',
-            'api'      => 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml',
+            'home'     => 'https://www.ecb.europa.eu/',
+            'api'      => 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml',
             'freq'     => 'Daily rates at 3:00 PM Central European Time (CET)',
             'about'    => 'The European Central Bank (ECB) is the central bank of the'
                 . ' European Union countries which have adopted the Euro.'
@@ -76,8 +76,8 @@ class Config
         'BankSwitzerland' => [
             'currency' => 'CHF',
             'name'     => 'Swiss National Bank',
-            'home'     => 'http://www.snb.ch/',
-            'api'      => 'http://www.snb.ch/selector/en/mmr/exfeed/rss',
+            'home'     => 'https://www.snb.ch/',
+            'api'      => 'https://www.snb.ch/selector/en/mmr/exfeed/rss',
             'freq'     => 'Daily rates at 11:00 AM Central European Time (CET)',
             'about'    => 'The Swiss National Bank (SNB) is the central bank of Switzerland.'
                 . '  It was founded in 1826.',
@@ -85,8 +85,8 @@ class Config
         'BankIsrael' => [
             'currency' => 'ILS',
             'name'     => 'Bank of Israel',
-            'home'     => 'http://www.boi.org.il/en/',
-            'api'      => 'http://www.boi.org.il/currency.xml',
+            'home'     => 'https://www.boi.org.il/en/',
+            'api'      => 'https://www.boi.org.il/currency.xml',
             'freq'     => 'Daily',
             'about'    => 'The Bank of Israel'
                 . ' ( בנק ישראל) '
@@ -95,8 +95,8 @@ class Config
         'BankRussia' => [
             'currency' => 'RUB',
             'name'     => 'Central Bank of the Russian Federation',
-            'home'     => 'http://www.cbr.ru/eng/',
-            'api'      => 'http://www.cbr.ru/scripts/XML_daily.asp',
+            'home'     => 'https://www.cbr.ru/eng/',
+            'api'      => 'https://www.cbr.ru/scripts/XML_daily.asp',
             'freq'     => 'Daily',
             'about'    => 'The Central Bank of the Russian Federation'
                 . ' (Центральный банк Российской Федерации)'
