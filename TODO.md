@@ -2,8 +2,7 @@
 
 * db migration script
 * per-page `<title>`
-* unit tests
-* travis-ci build
+* unit tests + add to travis build
 * full documentation
 * refactor feed processing to XPATH
 * refactor layout to CSS GRID
