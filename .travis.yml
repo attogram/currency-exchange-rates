@@ -17,9 +17,10 @@ before_script:
 script:
   # Test Install via composer create-project
   - composer create-project attogram/currency-exchange-rates your-install-directory
-  - chmod 777 your-install-directory/db
-  - cp your-install-directory/custom/config.example.php your-install-directory/custom/config.php
-  - php your-install-directory/cli/update.php
+  - cd your-install-directory
+  - chmod 777 db
+  - cp custom/config.example.php custom/config.php
+  - php cli/update.php
   # PHP Lint all the things
   - if find . -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
   # Unit Tests
