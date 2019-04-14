@@ -1,2 +1,2 @@
-*.sqlite
-*.sqlite-journal
+!Database.md
+*
