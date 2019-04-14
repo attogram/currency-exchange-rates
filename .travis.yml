@@ -1,5 +1,6 @@
-# Attogram Router - https://github.com/attogram/currency-exchange-rates
-# Travis CI - https://travis-ci.org/attogram/currency-exchange-rates
+# Attogram Currency Exchange Rates
+# <https://github.com/attogram/currency-exchange-rates>
+# <https://travis-ci.org/attogram/currency-exchange-rates>
 language: php
 php:
   - '7.0'
@@ -14,15 +15,12 @@ matrix:
 before_script:
   - composer install
 script:
-  # Test composer create-project install
+  # Test Install via composer create-project
   - composer create-project attogram/currency-exchange-rates your-install-directory
+  - chmod 777 your-install-directory/db
+  - cp custom/config.example.php custom/config.php
+  - php cli/update.php
   # PHP Lint all the things
   - if find . -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-#  - if find cli/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-#  - if find custom/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-#  - if find db/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-#  - if find public/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-#  - if find src/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-#  - if find vendor/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+  # Unit Tests
 #  - phpunit tests
-
