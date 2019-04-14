@@ -14,10 +14,15 @@ matrix:
 before_script:
   - composer install
 script:
-  - if find cli/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-  - if find custom/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-  - if find db/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-  - if find public/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-  - if find src/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
-  - if find vendor/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+  # Test composer create-project install
+  - composer create-project attogram/currency-exchange-rates your-install-directory
+  # PHP Lint all the things
+  - if find . -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+#  - if find cli/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+#  - if find custom/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+#  - if find db/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+#  - if find public/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+#  - if find src/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+#  - if find vendor/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
 #  - phpunit tests
+
