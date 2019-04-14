@@ -114,16 +114,16 @@ class CurrencyExchangeRates
         $this->displayHeader();
         $currency = Config::$feeds[$feedCode]['currency'];
         print 'About The ' . Config::$feeds[$feedCode]['name'] . "\n"
-            . '</pre>' . Config::$feeds[$feedCode]['about'] . "<pre>\n\n"
+            . '</pre>' . Config::$feeds[$feedCode]['about'] . "<pre>\n"
             . 'Currency: <b><a href="' . $this->router->getHome() . $currency
             . '/">' . $currency . '</a></b> (' . Config::getFeedCurrencyName($currency) . ")\n\n"
             . $this->feedInfoPairs($currency) . "\n\n"
             . 'Website: <a href="'. Config::$feeds[$feedCode]['home'] . '">'
             . Config::$feeds[$feedCode]['home'] . "</a>\n\n"
             . 'API Endpoint: <a href="' . Config::$feeds[$feedCode]['api'] . '">'
-            . Config::$feeds[$feedCode]['api'] . "</a>\n"
+            . Config::$feeds[$feedCode]['api'] . "</a>\n\n"
             . 'API Update Frequency: ' . Config::$feeds[$feedCode]['freq'] . "\n\n"
-            . 'Feed Code: ' . $feedCode . "\n\n";
+            . 'Feed Code: ' . $feedCode . "\n";
         $this->displayFooter();
     }
 
