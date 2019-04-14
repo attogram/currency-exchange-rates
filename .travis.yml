@@ -20,7 +20,8 @@ script:
   - cd your-install-directory
   - chmod 777 db
   - cp custom/config.example.php custom/config.php
-  - php cli/update.php
+  - cd cli
+  - php update.php
   # PHP Lint all the things
   - if find . -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
   # Unit Tests
