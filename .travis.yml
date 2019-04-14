@@ -1,0 +1,23 @@
+# Attogram Router - https://github.com/attogram/currency-exchange-rates
+# Travis CI - https://travis-ci.org/attogram/currency-exchange-rates
+language: php
+php:
+  - '7.0'
+  - '7.1'
+  - '7.2'
+  - '7.3'
+  - nightly
+matrix:
+  allow_failures:
+    - php: nightly
+  fast_finish: true
+before_script:
+  - composer install
+script:
+  - if find cli/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+  - if find custom/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+  - if find db/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+  - if find public/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+  - if find src/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+  - if find vendor/ -name "*.php" -exec php -l {} 2>&1 \; | grep "error,"; then exit 1; fi;
+#  - phpunit tests
