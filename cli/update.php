@@ -13,13 +13,17 @@ if (!is_readable($autoload)) {
 /** @noinspection PhpIncludeInspection */
 require_once $autoload;
 
-$code = $argv[1] ?? '';
-
-if (!Config::isValidFeed($code)) {
+if (!isset($argv[1])) {
     print "\nAttogram Currency Exchange Rates Updater v" . CurrencyExchangeRates::VERSION . "\n\n"
         . "Usage: php " . $argv[0] . " FeedCode\n\n"
         . "Available Feed Codes:\n  - "
         . implode("\n  - ", array_keys(Config::$feeds)) . "\n";
+    exit(0);
+}
+$code = $argv[1];
+
+if (!Config::isValidFeed($code)) {
+    print 'Feed Code Not Found: ' . $class . "\n";
     exit(1);
 }
 
