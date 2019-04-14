@@ -1,8 +1,8 @@
 # Future Developments
 
-* db migration script
+* option disable custom header/footer on admin page and 404 responses
 * per-page `<title>`
-* option disable custom header/footer on 404 responses
+
 * refactor feed processing to XPATH
 * refactor layout to CSS GRID
 * number format - remove/grey-out trailing zeros
