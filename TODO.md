@@ -2,16 +2,16 @@
 
 * db migration script
 * per-page `<title>`
-* unit tests + add to travis build
-* full documentation
+* option disable custom header/footer on 404 responses
 * refactor feed processing to XPATH
 * refactor layout to CSS GRID
+* number format - remove/grey-out trailing zeros
+* unit tests + add to travis build
+* full documentation
 * add guzzle status to verbosity > 1 in admin Feeds
 * lower timeout, handle Uncaught GuzzleHttp\Exception\RequestException in admin Feeds
 * /about/ currency list from DB, use config only for name
 * custom config adminIP - allow multiple IPs
-* option disable custom header/footer on 404 responses
-* number format - remove/grey-out trailing zeros
 
 ## new feeds
 
