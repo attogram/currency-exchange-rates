@@ -17,7 +17,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '1.0.6';
+    const VERSION = '1.0.7-pre';
 
     /** @var string Feeds Namespace */
     const FEEDS_NAMESPACE = "\\Attogram\\Currency\\Feeds\\";
@@ -31,12 +31,8 @@ class CurrencyExchangeRates
     /** @var Router */
     protected $router;
 
-    /** @var bool Customization */
-    protected $custom = true;
-
     public function __construct()
     {
-        $this->custom = true;
         $this->loadConfig();
         $this->route();
     }
@@ -212,7 +208,7 @@ class CurrencyExchangeRates
     protected function error404(string $message = 'Page Not Found')
     {
         header('HTTP/1.0 404 Not Found');
-        $this->custom = false;
+        $this->disableCustomization();
         $this->displayHeader();
         print "\n\n404 $message\n\n";
         $this->displayFooter();
@@ -260,9 +256,7 @@ class CurrencyExchangeRates
     protected function displayHeader()
     {
         $this->displayHtmlHeader();
-        if ($this->custom) {
-            $this->includeCustom('header.php');
-        }
+        $this->includeCustom('header.php');
         print'<pre>';
         $this->displayMenu();
         print "\n\n\n";
@@ -287,9 +281,7 @@ a:hover { color:black; background-color:yellow; }
         print "\n\n\n"
             . '<small>Powered by <a href="' . self::GIT_REPO . '">attogram/currency-exchange-rates</a>'
             . ' v' . self::VERSION . "</small>\n\n" . '</pre>';
-        if ($this->custom) {
-            $this->includeCustom('footer.php');
-        }
+        $this->includeCustom('footer.php');
         print '</body></html>';
     }
 
@@ -318,7 +310,7 @@ a:hover { color:black; background-color:yellow; }
 
     protected function admin()
     {
-        $this->custom = false;
+        $this->disableCustomization();
         $this->displayHeader();
         print "Retrieve Feed Data:\n\n";
         foreach (Config::$feeds as $code => $feed) {
@@ -341,7 +333,7 @@ a:hover { color:black; background-color:yellow; }
 
             return;
         }
-        $this->custom = false;
+        $this->disableCustomization();
         $this->displayHeader();
         $api = Config::getFeedApi($feedCode);
         $name = Config::getFeedName($feedCode);

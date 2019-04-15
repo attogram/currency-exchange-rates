@@ -11,16 +11,31 @@ trait CustomizationTrait
     /** @var array */
     protected $config = [];
 
+    /** @var bool  */
+    protected $isEnabled = true;
+
     /** @var string */
     protected $customDirectory = __DIR__ . DIRECTORY_SEPARATOR . '..'
         . DIRECTORY_SEPARATOR . 'custom' . DIRECTORY_SEPARATOR;
+
+    protected function enableCustomization()
+    {
+        $this->isEnabled = true;
+    }
+
+    protected function disableCustomization()
+    {
+        $this->isEnabled = false;
+    }
 
     /**
      * @param string $fileName
      */
     protected function includeCustom(string $fileName)
     {
-        if (is_readable($this->customDirectory . $fileName)) {
+        if ($this->isEnabled
+            && is_readable($this->customDirectory . $fileName)
+        ) {
             /** @noinspection PhpIncludeInspection */
             include($this->customDirectory . $fileName);
         }
