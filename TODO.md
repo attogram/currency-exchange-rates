@@ -1,8 +1,6 @@
 # Future Developments
 
-* option disable custom header/footer on admin page and 404 responses
 * per-page `<title>`
-
 * refactor feed processing to XPATH
 * refactor layout to CSS GRID
 * number format - remove/grey-out trailing zeros
@@ -12,6 +10,7 @@
 * lower timeout, handle Uncaught GuzzleHttp\Exception\RequestException in admin Feeds
 * /about/ currency list from DB, use config only for name
 * custom config adminIP - allow multiple IPs
+* optional turn on custom header/footer for 404 page, admin pages
 
 ## new feeds
 
