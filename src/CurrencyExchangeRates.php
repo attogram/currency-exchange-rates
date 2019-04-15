@@ -31,8 +31,12 @@ class CurrencyExchangeRates
     /** @var Router */
     protected $router;
 
+    /** @var bool Customization */
+    protected $custom = true;
+
     public function __construct()
     {
+        $this->custom = true;
         $this->loadConfig();
         $this->route();
     }
@@ -208,6 +212,7 @@ class CurrencyExchangeRates
     protected function error404(string $message = 'Page Not Found')
     {
         header('HTTP/1.0 404 Not Found');
+        $this->custom = false;
         $this->displayHeader();
         print "\n\n404 $message\n\n";
         $this->displayFooter();
@@ -254,23 +259,25 @@ class CurrencyExchangeRates
 
     protected function displayHeader()
     {
-        print '<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>' . $this->config['title'] . '</title>
-<style>
-body { margin:25px; }
-a, a:visited { color:darkblue; text-decoration:none; }
-a:hover { color:black; background-color:yellow; }
-</style>
-</head>
-<body>';
-        $this->includeCustom('header.php');
+        $this->displayHtmlHeader();
+        if ($this->custom) {
+            $this->includeCustom('header.php');
+        }
         print'<pre>';
         $this->displayMenu();
         print "\n\n\n";
+    }
+
+    protected function displayHtmlHeader()
+    {
+        print '<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>' . $this->config['title'] . '</title><style>
+body { margin:25px; }
+a, a:visited { color:darkblue; text-decoration:none; }
+a:hover { color:black; background-color:yellow; }
+</style></head><body>';
     }
 
     protected function displayFooter()
@@ -280,7 +287,9 @@ a:hover { color:black; background-color:yellow; }
         print "\n\n\n"
             . '<small>Powered by <a href="' . self::GIT_REPO . '">attogram/currency-exchange-rates</a>'
             . ' v' . self::VERSION . "</small>\n\n" . '</pre>';
-        $this->includeCustom('footer.php');
+        if ($this->custom) {
+            $this->includeCustom('footer.php');
+        }
         print '</body></html>';
     }
 
@@ -309,6 +318,7 @@ a:hover { color:black; background-color:yellow; }
 
     protected function admin()
     {
+        $this->custom = false;
         $this->displayHeader();
         print "Retrieve Feed Data:\n\n";
         foreach (Config::$feeds as $code => $feed) {
@@ -331,6 +341,7 @@ a:hover { color:black; background-color:yellow; }
 
             return;
         }
+        $this->custom = false;
         $this->displayHeader();
         $api = Config::getFeedApi($feedCode);
         $name = Config::getFeedName($feedCode);
