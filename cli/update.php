@@ -23,7 +23,7 @@ if (!isset($argv[1])) {
 $code = $argv[1];
 
 if (!Config::isValidFeed($code)) {
-    print 'Feed Code Not Found: ' . $class . "\n";
+    print 'Feed Code Not Found: ' . $code . "\n";
     exit(1);
 }
 
