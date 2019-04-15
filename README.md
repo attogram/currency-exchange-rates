@@ -1,5 +1,7 @@
 # Attogram Currency Exchange Rates
 
+[![screenshot](https://raw.githubusercontent.com/attogram/attogram-docs/master/currency-exchange-rates/currency-exchange-rates.png)](https://raw.githubusercontent.com/attogram/attogram-docs/master/currency-exchange-rates/currency-exchange-rates.png)
+
 [![Maintainability](https://api.codeclimate.com/v1/badges/c93e67dac8f094b3608f/maintainability)](https://codeclimate.com/github/attogram/currency-exchange-rates/maintainability)
 [![Build Status](https://travis-ci.org/attogram/currency-exchange-rates.svg?branch=master)](https://travis-ci.org/attogram/currency-exchange-rates)
 [![Latest Stable Version](https://poser.pugx.org/attogram/currency-exchange-rates/v/stable)](https://packagist.org/packages/attogram/currency-exchange-rates)
