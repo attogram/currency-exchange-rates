@@ -72,7 +72,7 @@ class CurrencyExchangeRates
         $this->database = new Database();
         $this->displayCurrencyCodes();
         $pairCount = $this->displayCurrencyPairs();
-        print "\n\nExchange rates as of " . gmdate('Y-m-d H:i:s') . " UTC\n\n";
+        print "\n\nLatest Exchange rates\n\n";
         $rates = $this->database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT ' . $pairCount);
         print Format::formatRates($rates, $this->router->getHome());
         $this->displayFooter();
@@ -288,10 +288,11 @@ a:hover { color:black; background-color:yellow; }
     protected function displayMenu()
     {
         print '<b><a href="' . $this->router->getHomeFull() . '">' . $this->config['title'] . '</a></b>';
-        print '   <a href="' . $this->router->getHomeFull() . 'about/">about</a></b>';
+        print '    <a href="' . $this->router->getHomeFull() . 'about/">about</a></b>';
         if ($this->isAdmin()) {
             print '   <em><a href="' . $this->router->getHomeFull() . 'admin/">admin</a></em>';
         }
+        print '    ' . gmdate('Y-m-d H:i:s') . ' UTC';
     }
 
     /**
