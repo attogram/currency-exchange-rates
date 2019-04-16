@@ -8,7 +8,12 @@ use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 
+use function count;
 use function explode;
+use function is_array;
+use function is_string;
+use function print_r;
+use function strlen;
 
 class Feed implements FeedsInterface
 {
@@ -30,16 +35,23 @@ class Feed implements FeedsInterface
     /**
      * Feed constructor.
      * @param string $api
-     * @param int $verbosity
+     * @param int $verbosity - 0 = quiet
+     * @param string $raw
      * @throws Exception
      * @throws GuzzleException
      */
-    public function __construct(string $api, int $verbosity = 1)
+    public function __construct(string $api, int $verbosity = 1, string $raw = '')
     {
         $this->api = $api;
         $this->verbosity = $verbosity;
-        $this->verbose("\n\nGetting feed: " . $this->api);
-        $this->get();
+
+        if (empty($raw)) {
+            $this->verbose("\n\nGetting feed: " . $this->api);
+            $this->get();
+        } else {
+            $this->verbose("\n\nUsing Raw: " . strlen($raw) . ' characters');
+            $this->raw = $raw;
+        }
         $this->verbose("\n\nGot " . strlen($this->raw) . " characters\n");
         $this->verbose('<textarea rows="5" cols="100">' . $this->raw . '</textarea>');
         $this->transform();
@@ -62,6 +74,7 @@ class Feed implements FeedsInterface
             print $text;
         }
     }
+
     /**
      * Get the feed into $this->raw
      *

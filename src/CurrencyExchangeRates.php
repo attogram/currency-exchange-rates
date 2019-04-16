@@ -49,6 +49,7 @@ class CurrencyExchangeRates
         if ($this->isAdmin()) {
             $this->router->allow('/admin/', 'admin');
             $this->router->allow('/admin/feed/?/', 'adminFeed');
+            $this->router->allow('/admin/feed/?/raw/', 'adminFeedRaw');
         }
         $match = $this->router->match();
         if ($match && method_exists($this, $match)) {
@@ -315,7 +316,8 @@ a:hover { color:black; background-color:yellow; }
         $this->displayHeader();
         print "Retrieve Feed Data:\n\n";
         foreach (Config::$feeds as $code => $feed) {
-            print ' - <a href="feed/' . $code . '/">' . $feed['name'] . "</a>\n\n";
+            print ' - <a href="feed/' . $code . '/">' . $feed['name'] . " [API Import]</a>"
+                . '   [<a href="feed/' . $code . '/raw/">raw import</a>]' . "\n\n";
         }
         $this->displayFooter();
     }
@@ -340,6 +342,40 @@ a:hover { color:black; background-color:yellow; }
         $name = Config::getFeedName($feedCode);
         print "Feed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
         new $class($api);
+        $this->displayFooter();
+    }
+
+    protected function adminFeedRaw()
+    {
+        $feedCode = $this->router->getVar(0);
+        if (!Config::isValidFeed($feedCode)) {
+            $this->error404('Feed Not Found');
+
+            return;
+        }
+        $class = self::FEEDS_NAMESPACE . $feedCode;
+        if (!class_exists($class)) {
+            $this->error404('Feed Class Not Found');
+
+            return;
+        }
+        $this->disableCustomization();
+        $this->displayHeader();
+        $api = Config::getFeedApi($feedCode);
+        $name = Config::getFeedName($feedCode);
+        print "Feed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
+
+        print "Raw Import: $feedCode\n\n";
+        if (empty($_POST['raw'])) {
+            print '<form method="POST"><textarea name="raw" cols="80" rows="25"></textarea>
+<input type="submit" />
+</form>';
+            $this->displayFooter();
+
+            return;
+        }
+
+        new $class('', 1, $_POST['raw']);
         $this->displayFooter();
     }
 }
