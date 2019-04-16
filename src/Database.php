@@ -10,7 +10,10 @@ use function array_merge;
 use function array_unique;
 use function file_exists;
 use function in_array;
+use function is_writable;
 use function print_r;
+use function sort;
+use function touch;
 
 class Database
 {
@@ -26,7 +29,7 @@ class Database
     public function __construct()
     {
         if (!in_array('sqlite', PDO::getAvailableDrivers())) {
-            throw new Exception('sqlite driver not found');
+            $this->fail('sqlite driver not found');
         }
         $createTables = false;
         if (!file_exists($this->dbFile)) {
@@ -34,7 +37,7 @@ class Database
             $createTables = true;
         }
         if (!is_writable($this->dbFile)) {
-            throw new Exception('Database is not writeable');
+            $this->fail('Database is not writeable');
         }
         $this->pdo = new PDO('sqlite:'. $this->dbFile);
         if ($createTables) {
@@ -52,17 +55,14 @@ class Database
     {
         $statement = $this->pdo->prepare($sql);
         if (!$statement) {
-            throw new Exception('prepare statement failed: '
-                . print_r($this->pdo->errorInfo(), true));
+            $this->fail('query: prepare statement failed');
         }
         if (!$statement->execute($bind)) {
-            throw new Exception('execute statement failed: '
-                . print_r($this->pdo->errorInfo(), true));
+            $this->fail('query: execute statement failed');
         }
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         if (!$result && ($this->pdo->errorCode() != '00000')) {
-            throw new Exception('statement fetchAll failed: '
-                . print_r($this->pdo->errorInfo(), true));
+            $this->fail('query: statement fetchAll failed');
         }
 
         return $result;
@@ -77,18 +77,24 @@ class Database
     {
         $statement = $this->pdo->prepare($sql);
         if (!$statement) {
-            throw new Exception(
-                'insert prepare statement failed: '
-                . print_r($this->pdo->errorInfo(), true)
-            );
+            $this->fail('insert: prepare statement failed');
         }
         $result = $statement->execute($bind);
         if (!$result && ($this->pdo->errorCode() != '00000')) {
-            throw new Exception(
-                'insert execute statement failed: '
-                . $this->pdo->errorCode() . ' - ' . print_r($this->pdo->errorInfo(), true)
-            );
+            $this->fail('insert: execute statement failed');
         }
+    }
+
+    /**
+     * @param string $message
+     * @throws Exception
+     */
+    private function fail(string $message = 'ERROR')
+    {
+        throw new Exception(
+            $message . ': ' . $this->pdo->errorCode()
+            . ' - ' . print_r($this->pdo->errorInfo(), true)
+        );
     }
 
     /**
