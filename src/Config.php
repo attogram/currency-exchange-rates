@@ -9,6 +9,7 @@ class Config
 {
     /** @var array ISO 4217 => name */
     public static $currencies = [
+        'AED' => ['name' => 'United Arab Emirates Dirham'],
         'AUD' => ['name' => 'Australian Dollar'],
         'AMD' => ['name' => 'Armenian Dram'],
         'AZN' => ['name' => 'Azerbaijani Manat'],
@@ -41,6 +42,7 @@ class Config
         'MYR' => ['name' => 'Malaysian Ringgit'],
         'NOK' => ['name' => 'Norwegian Krone'],
         'NZD' => ['name' => 'New Zealand Dollar'],
+        'PGK' => ['name' => 'Papua New Guinean Kina'],
         'PHP' => ['name' => 'Philippine Piso'],
         'PLN' => ['name' => 'Poland Złoty'],
         'RON' => ['name' => 'Romanian Leu'],
@@ -51,9 +53,11 @@ class Config
         'TJS' => ['name' => 'Tajikistani Somoni'],
         'TMT' => ['name' => 'Turkmenistan Manat'],
         'TRY' => ['name' => 'Turkish Lira'],
+        'TWD' => ['name' => 'Taiwan New Dollar'],
         'UAH' => ['name' => 'Ukrainian Hryvnia'],
         'USD' => ['name' => 'United States Dollar'],
         'UZS' => ['name' => 'Uzbekistani Som'],
+        'VND' => ['name' => 'Vietnamese Dong'],
         'XDR' => ['name' => 'Special Drawing Rights'],
         'ZAR' => ['name' => 'South African Rand'],
     ];
@@ -119,6 +123,20 @@ class Config
                 . ' is the central bank of Russia.'
                 . ' The bank was founded in 1990.',
         ],
+        'BankAustralia' => [
+            'currency' => 'AUD',
+            'targets' => [
+                'AED', 'CAD', 'CHF', 'CNY', 'EUR', 'GBP', 'KRW',
+                'HKD', 'IDR', 'INR', 'JPY', 'MYR', 'PGK', 'SGD',
+                'SDR', 'THB', 'TWD', 'NZD', 'USD', 'VND',
+            ],
+            'name' => 'Reserve Bank of Australia',
+            'home' => 'https://www.rba.gov.au/',
+            'api' => 'https://www.rba.gov.au/rss/rss-cb-exchange-rates.xml',
+            'freq' => 'Daily around 4.00 PM Eastern Australian Time',
+            'about' => 'The Reserve Bank of Australia (RBA) is the central bank of Australia.'
+                . ' The RBA was founded in 1960.',
+        ]
     ];
 
     /**

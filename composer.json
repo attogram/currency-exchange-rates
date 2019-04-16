@@ -9,7 +9,8 @@
         "attogram/router": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
         "ext-mbstring": "*",
-        "ext-pdo": "*"
+        "ext-PDO": "*",
+        "ext-simplexml": "*"
     },
     "autoload": {
         "psr-4": {

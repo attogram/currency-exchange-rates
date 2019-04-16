@@ -17,7 +17,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '1.0.9';
+    const VERSION = '1.0.10-pre';
 
     /** @var string Feeds Namespace */
     const FEEDS_NAMESPACE = "\\Attogram\\Currency\\Feeds\\";
@@ -191,7 +191,9 @@ class CurrencyExchangeRates
 
             return;
         }
-        $this->displayHeader("$source/$target exchange rates");
+        $fullName = Config::getFeedCurrencyName($source) . ' to '
+            . Config::getFeedCurrencyName($target);
+        $this->displayHeader("$source/$target ($fullName) exchange rates");
         $this->database = new Database();
         $rates = $this->database->query(
             'SELECT * FROM rates WHERE source = :s AND target = :t ORDER BY last_updated DESC LIMIT 100',
@@ -199,7 +201,7 @@ class CurrencyExchangeRates
         );
         print '<a href="' . $this->router->getHome() . $source . '/">' . "$source</a>"
             . '/<a href="' . $this->router->getHome() . $target . '/">' . "$target</a>"
-            . " Rates:\n\n" . Format::formatRates($rates, $this->router->getHome());
+            . " ($fullName) exchange rates:\n\n" . Format::formatRates($rates, $this->router->getHome());
         $this->displayFooter();
     }
 

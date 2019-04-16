@@ -1,5 +1,6 @@
 # Future Developments
 
+* custom config adminIP - allow multiple IPs
 * refactor feed processing to XPATH
 * refactor layout to CSS GRID
 * number format - remove/grey-out trailing zeros
@@ -8,8 +9,6 @@
 * add guzzle status to verbosity > 1 in admin Feeds
 * lower timeout, handle Uncaught GuzzleHttp\Exception\RequestException in admin Feeds
 * /about/ currency list from DB, use config only for name
-* custom config adminIP - allow multiple IPs
-* optional turn on custom header/footer for 404 page, admin pages
 
 ## new feeds
 
@@ -19,8 +18,6 @@
   * <https://www.bankofcanada.ca/valet/fx_rss/>
   * <https://www.bankofcanada.ca/stats/assets/rates_rss/noon/en_all.xml>
   * <https://www.bankofcanada.ca/stats/assets/rates_rss/closing/en_all.xml>
-* Reserve Bank of Australia
-  * <https://www.rba.gov.au/rss/rss-cb-exchange-rates.xml>
 * Bank of Thailand
   * <https://www2.bot.or.th/RSS/fxrates/fxrate-all.xml>
 * National Bank of Denmark
