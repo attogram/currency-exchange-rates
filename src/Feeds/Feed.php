@@ -44,14 +44,12 @@ class Feed implements FeedsInterface
     {
         $this->api = $api;
         $this->verbosity = $verbosity;
-
-        if (empty($raw)) {
-            $this->verbose("\n\nGetting feed: " . $this->api);
-            $this->get();
-        } else {
+        if (!empty($raw)) {
             $this->verbose("\n\nUsing Raw: " . strlen($raw) . ' characters');
             $this->raw = $raw;
         }
+        $this->verbose("\n\nGetting feed: " . $this->api);
+        $this->get();
         $this->verbose("\n\nGot " . strlen($this->raw) . " characters\n");
         $this->verbose('<textarea rows="5" cols="100">' . $this->raw . '</textarea>');
         $this->transform();
@@ -83,6 +81,9 @@ class Feed implements FeedsInterface
      */
     public function get()
     {
+        if (!empty($this->raw)) {
+            return $this->raw;
+        }
         if (empty($this->api) || !is_string($this->api)) {
             throw new Exception('API undefined');
         }
