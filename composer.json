@@ -1,6 +1,6 @@
 {
     "name": "attogram/currency-exchange-rates",
-    "description": "Currency Exchange Rates Website with data from: The European Central Bank, The Swiss National Bank, The Bank of Israel, and The Central Bank of the Russian Federation. PHP7/SQLite",
+    "description": "Currency Exchange Rates Website with data from: The European Central Bank, The Swiss National Bank, The Bank of Israel, The Central Bank of the Russian Federation, and The Reserve Bank of Australia. PHP7/SQLite",
     "type": "project",
     "license": "MIT",
     "homepage": "https://github.com/attogram/currency-exchange-rates",
