@@ -17,7 +17,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '1.0.8';
+    const VERSION = '1.0.9-pre';
 
     /** @var string Feeds Namespace */
     const FEEDS_NAMESPACE = "\\Attogram\\Currency\\Feeds\\";
@@ -81,7 +81,7 @@ class CurrencyExchangeRates
 
     protected function about()
     {
-        $this->displayHeader();
+        $this->displayHeader('About ' . $this->config['title']);
         $count = count(Config::$feeds) - count($this->config['hidden']);
         print 'This site incorporates currency exchange data retrieved from'
             . " $count sources:\n\n";
@@ -112,7 +112,7 @@ class CurrencyExchangeRates
 
             return;
         }
-        $this->displayHeader();
+        $this->displayHeader('About The ' . Config::$feeds[$feedCode]['name']);
         $currency = Config::$feeds[$feedCode]['currency'];
         print 'About The ' . Config::$feeds[$feedCode]['name'] . "\n"
             . '</pre>' . Config::$feeds[$feedCode]['about'] . "<pre>\n"
@@ -168,7 +168,7 @@ class CurrencyExchangeRates
 
             return;
         }
-        $this->displayHeader();
+        $this->displayHeader($currency . ' (' . Config::getFeedCurrencyName($currency) . ') exchange rates');
         $this->database = new Database();
         $rates = $this->database->query(
             'SELECT * FROM rates WHERE source = :s OR target = :t ORDER BY last_updated DESC LIMIT 100',
@@ -191,7 +191,7 @@ class CurrencyExchangeRates
 
             return;
         }
-        $this->displayHeader();
+        $this->displayHeader("$source/$target exchange rates");
         $this->database = new Database();
         $rates = $this->database->query(
             'SELECT * FROM rates WHERE source = :s AND target = :t ORDER BY last_updated DESC LIMIT 100',
@@ -206,12 +206,12 @@ class CurrencyExchangeRates
     /**
      * @param string $message
      */
-    protected function error404(string $message = 'Page Not Found')
+    protected function error404(string $message = '404 Page Not Found')
     {
         header('HTTP/1.0 404 Not Found');
         $this->disableCustomization();
-        $this->displayHeader();
-        print "\n\n404 $message\n\n";
+        $this->displayHeader($message);
+        print "\n\n$message\n\n";
         $this->displayFooter();
     }
 
@@ -254,21 +254,27 @@ class CurrencyExchangeRates
         return count($pairs);
     }
 
-    protected function displayHeader()
+    /**
+     * @param string $title
+     */
+    protected function displayHeader(string $title = '')
     {
-        $this->displayHtmlHeader();
+        $this->displayHtmlHeader($title);
         $this->includeCustom('header.php');
         print'<pre>';
         $this->displayMenu();
         print "\n\n\n";
     }
 
-    protected function displayHtmlHeader()
+    protected function displayHtmlHeader(string $title = '')
     {
+        if (empty($title)) {
+            $title = $this->config['title'];
+        }
         print '<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>' . $this->config['title'] . '</title><style>
+<title>' . $title . '</title><style>
 body { margin:25px; }
 a, a:visited { color:darkblue; text-decoration:none; }
 a:hover { color:black; background-color:yellow; }
@@ -313,7 +319,7 @@ a:hover { color:black; background-color:yellow; }
     protected function admin()
     {
         $this->disableCustomization();
-        $this->displayHeader();
+        $this->displayHeader('Admin');
         print "Retrieve Feed Data:\n\n";
         foreach (Config::$feeds as $code => $feed) {
             print ' - <a href="feed/' . $code . '/">' . $feed['name'] . " [API Import]</a>"

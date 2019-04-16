@@ -1,6 +1,5 @@
 # Future Developments
 
-* per-page `<title>`
 * refactor feed processing to XPATH
 * refactor layout to CSS GRID
 * number format - remove/grey-out trailing zeros
