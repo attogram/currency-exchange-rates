@@ -12,6 +12,7 @@ Currency Exchange Rates Website with data from:
 * The Swiss National Bank
 * The Bank of Israel
 * The Central Bank of the Russian Federation
+* The Reserve Bank of Australia
 
 Live Demo: **<https://getitdaily.com/rates/>**
 
