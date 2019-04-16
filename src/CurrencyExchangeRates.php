@@ -294,8 +294,8 @@ a:hover { color:black; background-color:yellow; }
 
     protected function displayMenu()
     {
-        print '<b><a href="' . $this->router->getHomeFull() . '">' . $this->config['title'] . '</a></b>';
-        print '    <a href="' . $this->router->getHomeFull() . 'about/">about</a></b>';
+        print '<b><a href="' . $this->router->getHomeFull() . '">' . $this->config['title'] . '</a></b>'
+            . '    <a href="' . $this->router->getHomeFull() . 'about/">about</a></b>';
         if ($this->isAdmin()) {
             print '   <em><a href="' . $this->router->getHomeFull() . 'admin/">admin</a></em>';
         }
@@ -370,7 +370,6 @@ a:hover { color:black; background-color:yellow; }
         $api = Config::getFeedApi($feedCode);
         $name = Config::getFeedName($feedCode);
         print "Feed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
-
         print "Raw Import: $feedCode\n\n";
         if (empty($_POST['raw'])) {
             print '<form method="POST"><textarea name="raw" cols="80" rows="25"></textarea>
@@ -380,7 +379,6 @@ a:hover { color:black; background-color:yellow; }
 
             return;
         }
-
         new $class('', 1, $_POST['raw']);
         $this->displayFooter();
     }
