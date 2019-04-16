@@ -12,7 +12,7 @@ class BankAustralia extends Feed implements FeedsInterface
     public function process()
     {
         $currencyList = [];
-        $date = $source = '';
+        $date = '';
         $xml = simplexml_load_string($this->raw);
         foreach ($xml->item as $item) {
             $spaced = explode(' ', (string) $item->title);

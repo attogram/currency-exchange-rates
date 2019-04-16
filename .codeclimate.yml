@@ -46,10 +46,13 @@ plugins:
     checks:
       PhanUndeclaredClassMethod:
         enabled: false
+      PhanUndeclaredClassProperty:
+        enabled: false
       PhanUndeclaredTypeProperty:
         enabled: false
       PhanUndeclaredTypeThrowsType:
         enabled: false
+
   phpcodesniffer:
     enabled: true
   phpmd:
@@ -57,6 +60,8 @@ plugins:
     checks:
       CleanCode/StaticAccess:
         enabled: false # allow Config::*, PDO::*
+      Controversial/Superglobals:
+        enabled: false # allow $_POST access
   shellcheck:
     enabled: true
   sonar-php:
@@ -66,6 +71,8 @@ plugins:
         enabled: false # allow generic throw Exception
       php:S125:
         enabled: false # allow commented code
+      php:S131:
+        enabled: false # allow switch without default
       php:S1192:
         enabled: false # allow duplicating literals
       php:S1848:
