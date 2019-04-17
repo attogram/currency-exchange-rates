@@ -75,7 +75,7 @@ class Config
             'name'     => 'European Central Bank',
             'home'     => 'https://www.ecb.europa.eu/',
             'api'      => 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml',
-            'freq'     => 'Daily rates at 3:00 PM Central European Time (CET)',
+            'freq'     => 'Weekday rates at 3:00 PM Central European Time (CET)',
             'about'    => 'The European Central Bank (ECB) is the central bank for '
                 . ' 19 European Union countries: Austria, Belgium, Cyprus, Estonia, Finland,'
                 . ' France, Germany, Greece, Ireland, Italy, Latvia, Lithuania, Luxembourg,'
@@ -88,7 +88,7 @@ class Config
             'name'     => 'Swiss National Bank',
             'home'     => 'https://www.snb.ch/',
             'api'      => 'https://www.snb.ch/selector/en/mmr/exfeed/rss',
-            'freq'     => 'Daily rates at 11:00 AM Central European Time (CET)',
+            'freq'     => 'Weekday rates at 11:00 AM Central European Time (CET)',
             'about'    => 'The Swiss National Bank (SNB) is the central bank of Switzerland.'
                 . ' The SNB was founded in 1826.',
         ],
@@ -133,7 +133,7 @@ class Config
             'name' => 'Reserve Bank of Australia',
             'home' => 'https://www.rba.gov.au/',
             'api' => 'https://www.rba.gov.au/rss/rss-cb-exchange-rates.xml',
-            'freq' => 'Daily around 4.00 PM Eastern Australian Time',
+            'freq' => 'Weekdays around 4.00 PM Eastern Australian Time',
             'about' => 'The Reserve Bank of Australia (RBA) is the central bank of Australia.'
                 . ' The RBA was founded in 1960.',
         ]
