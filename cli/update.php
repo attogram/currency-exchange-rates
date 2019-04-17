@@ -4,7 +4,7 @@ declare(strict_types = 1);
 use Attogram\Currency\Config;
 use Attogram\Currency\CurrencyExchangeRates;
 
-$autoload = '../vendor/autoload.php';
+$autoload = __DIR__ . '/../vendor/autoload.php';
 if (!is_readable($autoload)) {
     print 'Vendor autoload file not found: ' . $autoload . "\n";
     exit(1);
