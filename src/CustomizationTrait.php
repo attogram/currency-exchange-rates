@@ -51,7 +51,7 @@ trait CustomizationTrait
         if (empty($this->config['title']) || !is_string($this->config['title'])) {
             $this->config['title'] = 'Attogram Currency Exchange Rates';
         }
-        if (empty($this->config['adminIP']) || !is_string($this->config['adminIP'])) {
+        if (empty($this->config['adminIP']) || !is_array($this->config['adminIP'])) {
             $this->config['adminIP'] = null;
         }
         if (empty($this->config['hidden']) || !is_array($this->config['hidden'])) {

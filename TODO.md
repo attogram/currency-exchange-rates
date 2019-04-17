@@ -1,6 +1,5 @@
 # Future Developments
 
-* custom config adminIP - allow multiple IPs
 * refactor feed processing to simpleXML
 * refactor layout to CSS GRID
 * number format - remove/grey-out trailing zeros

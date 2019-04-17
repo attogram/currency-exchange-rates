@@ -310,7 +310,7 @@ a:hover { color:black; background-color:yellow; }
     protected function isAdmin()
     {
         if (!empty($this->config['adminIP'])
-            && $this->config['adminIP'] === $this->router->getServer('REMOTE_ADDR')
+            && in_array($this->router->getServer('REMOTE_ADDR'), $this->config['adminIP'])
         ) {
             return true;
         }
