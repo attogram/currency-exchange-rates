@@ -4,8 +4,40 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "27cd8cd64915d43c8fabd814e8561e1b",
+    "content-hash": "7385c9628d4122e880c2f692877fbbed",
     "packages": [
+        {
+            "name": "attogram/database",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/attogram/database.git",
+                "reference": "372a68387766d7ed6e9c18ddcd5063e2bf713478"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/attogram/database/zipball/372a68387766d7ed6e9c18ddcd5063e2bf713478",
+                "reference": "372a68387766d7ed6e9c18ddcd5063e2bf713478",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": "^7.0"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Attogram\\Database\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP access to SQLite database",
+            "homepage": "https://github.com/attogram/database",
+            "time": "2019-04-17T21:46:49+00:00"
+        },
         {
             "name": "attogram/router",
             "version": "v4.1.0",
@@ -326,13 +358,16 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "attogram/database": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.0",
         "ext-mbstring": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-simplexml": "*"
     },
     "platform-dev": []
 }

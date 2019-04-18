@@ -6,6 +6,7 @@
     "homepage": "https://github.com/attogram/currency-exchange-rates",
     "require": {
         "php": "^7.0",
+        "attogram/database": "dev-master",
         "attogram/router": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
         "ext-mbstring": "*",

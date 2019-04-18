@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency;
 
+use Attogram\Database\Database;
 use Attogram\Router\Router;
 use Exception;
 use Throwable;
@@ -17,7 +18,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '1.0.12';
+    const VERSION = '1.1.0-pre';
 
     /** @var string Feeds Namespace */
     const FEEDS_NAMESPACE = "\\Attogram\\Currency\\Feeds\\";
@@ -70,7 +71,7 @@ class CurrencyExchangeRates
     protected function home()
     {
         $this->displayHeader();
-        $this->database = new Database();
+        $this->connectDatabase();
         $this->displayCurrencyCodes();
         $pairCount = $this->displayCurrencyPairs();
         print "\n\nLatest Exchange rates\n\n";
@@ -135,7 +136,7 @@ class CurrencyExchangeRates
      */
     protected function feedInfoPairs(string $source)
     {
-        $this->database = new Database();
+        $this->connectDatabase();
         $pairsQ = $this->database->query(
             'SELECT DISTINCT source, target FROM rates WHERE source = :s ORDER BY target',
             ['s' => $source]
@@ -169,7 +170,7 @@ class CurrencyExchangeRates
             return;
         }
         $this->displayHeader($currency . ' (' . Config::getFeedCurrencyName($currency) . ') exchange rates');
-        $this->database = new Database();
+        $this->connectDatabase();
         $rates = $this->database->query(
             'SELECT * FROM rates WHERE source = :s OR target = :t ORDER BY last_updated DESC LIMIT 100',
             ['s' => $currency, 't' => $currency]
@@ -191,10 +192,10 @@ class CurrencyExchangeRates
 
             return;
         }
-        $fullName = Config::getFeedCurrencyName($source) . ' to '
+        $fullName = Config::getFeedCurrencyName($source) . ' / '
             . Config::getFeedCurrencyName($target);
         $this->displayHeader("$source/$target ($fullName) exchange rates");
-        $this->database = new Database();
+        $this->connectDatabase();
         $rates = $this->database->query(
             'SELECT * FROM rates WHERE source = :s AND target = :t ORDER BY last_updated DESC LIMIT 100',
             ['s' => $source, 't' => $target]
@@ -222,7 +223,7 @@ class CurrencyExchangeRates
      */
     protected function displayCurrencyCodes()
     {
-        $currencies = $this->database->getCurrencyCodes();
+        $currencies = $this->getCurrencyCodes();
         print count($currencies) . " Currencies\n\n";
         $break = 0;
         foreach ($currencies as $currency) {
@@ -241,7 +242,7 @@ class CurrencyExchangeRates
      */
     protected function displayCurrencyPairs()
     {
-        $pairs = $this->database->getCurrencyPairs();
+        $pairs = $this->getCurrencyPairs();
         print "\n\n" . count($pairs) . " Currency Pairs\n\n";
         $break = 0;
         foreach ($pairs as $pair) {
@@ -374,14 +375,61 @@ a:hover { color:black; background-color:yellow; }
         print "Feed: $name " . '<a href="' . $api . '">' . $api . '</a>' . "\n";
         print "Raw Import: $feedCode\n\n";
         if (empty($_POST['raw'])) {
-            print '<form method="POST"><textarea name="raw" cols="80" rows="25"></textarea>
-<input type="submit" />
-</form>';
+            print '<form method="POST"><textarea name="raw" cols="80" rows="25"></textarea>'
+                . "\n" . '<input type="submit" /></form>';
             $this->displayFooter();
 
             return;
         }
         new $class('', 1, $_POST['raw']);
         $this->displayFooter();
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getCurrencyCodes()
+    {
+        $codes = array_merge(
+            $this->database->query('SELECT DISTINCT source AS currency FROM rates ORDER BY source'),
+            $this->database->query('SELECT DISTINCT target AS currency FROM rates ORDER BY target')
+        );
+        $codes = array_unique($codes, SORT_REGULAR);
+        sort($codes);
+
+        return $codes;
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getCurrencyPairs()
+    {
+        return $this->database->query('SELECT DISTINCT source, target FROM rates ORDER BY source, target');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function connectDatabase()
+    {
+        $this->database = new Database();
+        $this->database->setDatabaseFile(
+            __DIR__ . DIRECTORY_SEPARATOR
+            . '..' . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'rates.sqlite'
+        );
+        $this->database->setCreateTables("
+            CREATE TABLE IF NOT EXISTS 'rates' (
+                'day' DATETIME NOT NULL,
+                'rate' NUMERIC,
+                'source' TEXT NOT NULL, 
+                'target' TEXT NOT NULL,
+                'feed' TEXT NOT NULL, 
+                'last_updated' DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+                PRIMARY KEY ('day', 'source', 'target', 'feed')
+            )
+        ");
     }
 }

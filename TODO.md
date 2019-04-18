@@ -1,5 +1,6 @@
 # Future Developments
 
+* /about/ currency list from DB, use config only for name
 * refactor feed processing to simpleXML
 * refactor layout to CSS GRID
 * number format - remove/grey-out trailing zeros
@@ -7,7 +8,6 @@
 * full documentation
 * add guzzle status to verbosity > 1 in admin Feeds
 * lower timeout, handle Uncaught GuzzleHttp\Exception\RequestException in admin Feeds
-* /about/ currency list from DB, use config only for name
 
 ## new feeds
 
