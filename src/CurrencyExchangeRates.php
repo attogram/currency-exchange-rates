@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency;
 
-use Attogram\Database\Database;
 use Attogram\Router\Router;
 use Exception;
 use Throwable;
@@ -18,7 +17,7 @@ class CurrencyExchangeRates
     use CustomizationTrait;
 
     /** @var string Version*/
-    const VERSION = '1.1.0';
+    const VERSION = '1.1.1-pre';
 
     /** @var string Feeds Namespace */
     const FEEDS_NAMESPACE = "\\Attogram\\Currency\\Feeds\\";
@@ -26,15 +25,16 @@ class CurrencyExchangeRates
     /** @var string Git Repository */
     const GIT_REPO = 'https://github.com/attogram/currency-exchange-rates';
 
-    /** @var Database|null */
-    protected $database;
-
     /** @var Router */
     protected $router;
+
+    /** @var CurrencyDatabase */
+    protected $currencyDatabase;
 
     public function __construct()
     {
         $this->loadConfig();
+        $this->currencyDatabase = new CurrencyDatabase();
         $this->route();
     }
 
@@ -71,11 +71,10 @@ class CurrencyExchangeRates
     protected function home()
     {
         $this->displayHeader();
-        $this->connectDatabase();
         $this->displayCurrencyCodes();
         $pairCount = $this->displayCurrencyPairs();
         print "\n\nLatest Exchange rates\n\n";
-        $rates = $this->database->query('SELECT * FROM rates ORDER BY last_updated DESC LIMIT ' . $pairCount);
+        $rates = $this->currencyDatabase->getLatestRates($pairCount);
         print Format::formatRates($rates, $this->router->getHome());
         $this->displayFooter();
     }
@@ -91,8 +90,8 @@ class CurrencyExchangeRates
                 continue;
             }
             print ' - <a href="' . $this->router->getHome() . 'about/' . $code . '/">'
-                . 'The ' . $feed['name'] . '</a>' . ' (<a href="' . $this->router->getHome() . $feed['currency'] . '/">'
-                . $feed['currency'] . '</a>)' . "\n";
+                . 'The ' . $feed['name'] . '</a>' . ' (<a href="' . $this->router->getHome()
+                . $feed['currency'] . '/">' . $feed['currency'] . '</a>)' . "\n";
         }
         print "\nwith " . count(Config::$currencies) . " available currencies:\n\n";
         foreach (Config::$currencies as $code => $currency) {
@@ -136,11 +135,7 @@ class CurrencyExchangeRates
      */
     protected function feedInfoPairs(string $source)
     {
-        $this->connectDatabase();
-        $pairsQ = $this->database->query(
-            'SELECT DISTINCT source, target FROM rates WHERE source = :s ORDER BY target',
-            ['s' => $source]
-        );
+        $pairsQ = $this->currencyDatabase->getCurrencyPairListBySource($source);
         $pairsA = [];
         foreach ($pairsQ as $pair) {
             $pairsA[] .= implode('/', $pair);
@@ -170,11 +165,7 @@ class CurrencyExchangeRates
             return;
         }
         $this->displayHeader($currency . ' (' . Config::getFeedCurrencyName($currency) . ') exchange rates');
-        $this->connectDatabase();
-        $rates = $this->database->query(
-            'SELECT * FROM rates WHERE source = :s OR target = :t ORDER BY last_updated DESC LIMIT 100',
-            ['s' => $currency, 't' => $currency]
-        );
+        $rates = $this->currencyDatabase->getExchangeRatesByCurrency($currency);
         print $currency . ' (' . Config::getFeedCurrencyName($currency) . ") Exchange Rates:\n\n"
             . Format::formatRates($rates, $this->router->getHome());
         $this->displayFooter();
@@ -195,11 +186,7 @@ class CurrencyExchangeRates
         $fullName = Config::getFeedCurrencyName($source) . ' / '
             . Config::getFeedCurrencyName($target);
         $this->displayHeader("$source/$target ($fullName) exchange rates");
-        $this->connectDatabase();
-        $rates = $this->database->query(
-            'SELECT * FROM rates WHERE source = :s AND target = :t ORDER BY last_updated DESC LIMIT 100',
-            ['s' => $source, 't' => $target]
-        );
+        $rates = $this->currencyDatabase->getExchageRatesByCurrencyPair($source, $target);
         print '<a href="' . $this->router->getHome() . $source . '/">' . "$source</a>"
             . '/<a href="' . $this->router->getHome() . $target . '/">' . "$target</a>"
             . " ($fullName) exchange rates:\n\n" . Format::formatRates($rates, $this->router->getHome());
@@ -223,7 +210,7 @@ class CurrencyExchangeRates
      */
     protected function displayCurrencyCodes()
     {
-        $currencies = $this->getCurrencyCodes();
+        $currencies = $this->currencyDatabase->getCurrencyCodes();
         print count($currencies) . " Currencies\n\n";
         $break = 0;
         foreach ($currencies as $currency) {
@@ -242,7 +229,7 @@ class CurrencyExchangeRates
      */
     protected function displayCurrencyPairs()
     {
-        $pairs = $this->getCurrencyPairs();
+        $pairs = $this->currencyDatabase->getCurrencyPairs();
         print "\n\n" . count($pairs) . " Currency Pairs\n\n";
         $break = 0;
         foreach ($pairs as $pair) {
@@ -383,53 +370,5 @@ a:hover { color:black; background-color:yellow; }
         }
         new $class('', 1, $_POST['raw']);
         $this->displayFooter();
-    }
-
-    /**
-     * @return array
-     * @throws Exception
-     */
-    public function getCurrencyCodes()
-    {
-        $codes = array_merge(
-            $this->database->query('SELECT DISTINCT source AS currency FROM rates ORDER BY source'),
-            $this->database->query('SELECT DISTINCT target AS currency FROM rates ORDER BY target')
-        );
-        $codes = array_unique($codes, SORT_REGULAR);
-        sort($codes);
-
-        return $codes;
-    }
-
-    /**
-     * @return array
-     * @throws Exception
-     */
-    public function getCurrencyPairs()
-    {
-        return $this->database->query('SELECT DISTINCT source, target FROM rates ORDER BY source, target');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function connectDatabase()
-    {
-        $this->database = new Database();
-        $this->database->setDatabaseFile(
-            __DIR__ . DIRECTORY_SEPARATOR
-            . '..' . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'rates.sqlite'
-        );
-        $this->database->setCreateTables("
-            CREATE TABLE IF NOT EXISTS 'rates' (
-                'day' DATETIME NOT NULL,
-                'rate' NUMERIC,
-                'source' TEXT NOT NULL, 
-                'target' TEXT NOT NULL,
-                'feed' TEXT NOT NULL, 
-                'last_updated' DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-                PRIMARY KEY ('day', 'source', 'target', 'feed')
-            )
-        ");
     }
 }

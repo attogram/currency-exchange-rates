@@ -15,12 +15,13 @@ require_once $autoload;
 
 if (!isset($argv[1])) {
     print "\nAttogram Currency Exchange Rates Updater v" . CurrencyExchangeRates::VERSION . "\n\n"
-        . "Usage: php " . $argv[0] . " FeedCode\n\n"
+        . "Usage: php " . $argv[0] . " FeedCode [VerbosityLevel]\n\n"
         . "Available Feed Codes:\n  - "
         . implode("\n  - ", array_keys(Config::$feeds)) . "\n";
     exit(0);
 }
 $code = $argv[1];
+$verbosity = (int) ($argv[2] ?? 0);
 
 if (!Config::isValidFeed($code)) {
     print 'Feed Code Not Found: ' . $code . "\n";
@@ -38,8 +39,6 @@ if (empty($api)) {
     print $code . ' API Endpoint Not Found' . "\n";
     exit(1);
 }
-
-$verbosity = 0;
 
 new $class($api, $verbosity);
 

@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace Attogram\Currency\Feeds;
 
-use Attogram\Currency\Database;
+use Attogram\Currency\CurrencyDatabase;
+use Attogram\Database\Database;
 use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
@@ -56,8 +57,10 @@ class Feed implements FeedsInterface
         $this->verbose("\n\nTransformed to " . strlen($this->raw) . " characters\n");
         $this->verbose('<textarea rows="5" cols="100">' . $this->raw . '</textarea>');
         $this->process();
-        $this->verbose("\n\nProcessed " . count($this->lines) . " lines\n");
-        $this->verbose('<textarea rows="5" cols="100">' . print_r($this->lines, true) . '</textarea>');
+        if (!empty($this->lines)) {
+            $this->verbose("\n\nProcessed " . count($this->lines) . " lines\n");
+            $this->verbose('<textarea rows="5" cols="100">' . print_r($this->lines, true) . '</textarea>');
+        }
         $this->insert();
         $this->verbose("\n\nInserted " . count($this->data) . " entries\n");
         $this->verbose('<textarea rows="10" cols="100">' . print_r($this->data, true) . '</textarea>');
@@ -127,12 +130,9 @@ class Feed implements FeedsInterface
         if (empty($this->data) || !is_array($this->data)) {
             throw new Exception('Data Not Found');
         }
-        $database = new Database();
+        $currencyDatabase = new CurrencyDatabase();
         foreach ($this->data as $bind) {
-            $database->insert(
-                'REPLACE INTO rates (day, rate, source, target, feed) VALUES (:d, :r, :s, :t, :f)',
-                $bind
-            );
+            $currencyDatabase->insertExchangeRate($bind);
         }
     }
 
