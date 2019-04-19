@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Attogram\Currency\Feeds;
 
 use Attogram\Currency\CurrencyDatabase;
-use Attogram\Database\Database;
 use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;

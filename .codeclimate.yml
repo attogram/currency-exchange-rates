@@ -9,7 +9,7 @@ checks:
   file-lines:
     config:
       #threshold: 250
-      threshold: 275
+      threshold: 300
   method-complexity:
     config:
       #threshold: 5

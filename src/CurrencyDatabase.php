@@ -38,7 +38,7 @@ class CurrencyDatabase
     }
 
     /**
-     * @param int|null $limit
+     * @param int $limit
      * @return array
      * @throws Exception
      */
