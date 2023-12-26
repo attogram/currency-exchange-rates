@@ -15,7 +15,7 @@ class BankSwitzerland extends Feed implements FeedsInterface
         $date = $rate = '';
         $count = 0;
         foreach ($this->lines as $line) {
-            if (preg_match("/\<dcterms\:created\>([[:graph:]]+)\<\/dcterms\:created\>/", $line, $match)) {
+            if (preg_match("/\<dc:date\>([[:graph:]]+)\<\/dc:date\>/", $line, $match)) {
                 $date = $match[1];
                 $date = substr($date, 0, 10);
             }
