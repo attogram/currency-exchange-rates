@@ -12,18 +12,12 @@ final class BankIsrael extends Feed implements FeedsInterface
         parent::process();
         $currency = [];
         $date = $currencyCode = '';
-        foreach ($this->lines as $line) {
-            if (preg_match("/\<LAST_UPDATE\>([[:graph:]]+)\<\/LAST_UPDATE\>/", $line, $match)) {
-                $date = $match[1];
-            }
-            if (preg_match("/\<CURRENCYCODE\>([[:graph:]]+)\<\/CURRENCYCODE\>/", $line, $match)) {
-                $currencyCode = $match[1];
-            }
-            if (preg_match("/\<RATE\>([[:graph:]]+)\<\/RATE\>/", $line, $match)) {
-                $rate = $match[1];
-                $currency[$currencyCode] = $rate;
-            }
+        $rates = json_decode($this->lines[0], true);
+        foreach ($rates['exchangeRates'] as $code) {
+            $date = substr($code['lastUpdate'], 0, 10);
+            $currencyCode = $code['key'];
+            $currency[$currencyCode] = $code['currentExchangeRate'];
+            $this->addData($currency, $date, 'ILS', 'BankIsrael');
         }
-        $this->addData($currency, $date, 'ILS', 'BankIsrael');
     }
 }
